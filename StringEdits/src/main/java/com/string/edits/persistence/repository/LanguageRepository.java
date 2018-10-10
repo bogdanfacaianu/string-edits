@@ -6,7 +6,7 @@ public interface LanguageRepository {
 
     void save(Language language);
 
-    void addToLanguage(String languageName, String pattern);
+    void addPatternToLanguage(String languageName, String pattern);
 
     void delete(String languageName);
 

@@ -17,7 +17,7 @@ public class DefaultLanguageRepository implements LanguageRepository {
         languageRepository.put(language.getName(), language);
     }
 
-    public void addToLanguage(String languageName, String pattern) {
+    public void addPatternToLanguage(String languageName, String pattern) {
         Language languageEntity = languageRepository.get(languageName);
         languageEntity.addPattern(pattern);
         save(languageEntity);

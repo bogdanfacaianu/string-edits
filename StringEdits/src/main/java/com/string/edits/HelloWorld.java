@@ -1,3 +1,5 @@
+package com.string.edits;
+
 public class HelloWorld {
 
     public static String getHello(String name) {

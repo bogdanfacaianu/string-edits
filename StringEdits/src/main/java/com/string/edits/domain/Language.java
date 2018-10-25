@@ -7,15 +7,15 @@ import java.util.Objects;
 public class Language {
 
     private String name;
-    private List<String> patterns = new ArrayList<>();
+    private List<String> dictionary = new ArrayList<>();
 
     public Language(String name) {
         this.name = name;
     }
 
-    public Language(String name, List<String> patterns) {
+    public Language(String name, List<String> dictionary) {
         this.name = name;
-        this.patterns = patterns;
+        this.dictionary = dictionary;
     }
 
     public String getName() {
@@ -26,16 +26,16 @@ public class Language {
         this.name = name;
     }
 
-    public List<String> getPatterns() {
-        return patterns;
+    public List<String> getDictionary() {
+        return dictionary;
     }
 
-    public void setPatterns(List<String> patterns) {
-        this.patterns = patterns;
+    public void setDictionary(List<String> dictionary) {
+        this.dictionary = dictionary;
     }
 
     public void addPattern(String pattern) {
-        patterns.add(pattern);
+        dictionary.add(pattern);
     }
 
     @Override
@@ -44,11 +44,11 @@ public class Language {
         if (o == null || getClass() != o.getClass()) return false;
         Language language = (Language) o;
         return Objects.equals(name, language.name) &&
-                Objects.equals(patterns, language.patterns);
+                Objects.equals(dictionary, language.dictionary);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, patterns);
+        return Objects.hash(name, dictionary);
     }
 }

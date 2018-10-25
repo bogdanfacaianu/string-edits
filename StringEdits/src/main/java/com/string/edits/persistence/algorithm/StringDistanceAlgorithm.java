@@ -1,10 +1,11 @@
 package com.string.edits.persistence.algorithm;
 
-/****************************************************************************************************************
-*   This algorithm's source can be found at:                                                                    *
-*   https://people.cs.pitt.edu/~kirk/cs1501/Pruhs/Spring2006/assignments/editdistance/Levenshtein%20Distance.htm*
-****************************************************************************************************************/
+/*****************************************************************************************************************
+*   This algorithm's source can be found at:                                                                     *
+*   https://people.cs.pitt.edu/~kirk/cs1501/Pruhs/Spring2006/assignments/editdistance/Levenshtein%20Distance.htm *
+*****************************************************************************************************************/
 
+@Deprecated
 public class StringDistanceAlgorithm {
 
     public static int computeDistance(String source, String target) {
@@ -13,8 +14,8 @@ public class StringDistanceAlgorithm {
         int targetLength; // length of t
         int sourceInterator; // iterates through s
         int targetIterator; // iterates through t
-        char s_i; // ith character of s
-        char t_j; // jth character of t
+        char sourceCharacterAtIndex; // ith character of s
+        char targetCharacterAtIndex; // jth character of t
         int cost; // cost
 
         // Step 1
@@ -38,14 +39,14 @@ public class StringDistanceAlgorithm {
 
         // Step 3
         for (sourceInterator = 1; sourceInterator <= sourceLength; sourceInterator++) {
-            s_i = source.charAt (sourceInterator - 1);
+            sourceCharacterAtIndex = source.charAt(sourceInterator - 1);
 
             // Step 4
             for (targetIterator = 1; targetIterator <= targetLength; targetIterator++) {
-                t_j = target.charAt (targetIterator - 1);
+                targetCharacterAtIndex = target.charAt(targetIterator - 1);
 
                 // Step 5
-                if (s_i == t_j) {
+                if (sourceCharacterAtIndex == targetCharacterAtIndex) {
                     cost = 0;
                 }
                 else {
@@ -53,7 +54,10 @@ public class StringDistanceAlgorithm {
                 }
 
                 // Step 6
-                d[sourceInterator][targetIterator] = minimum(d[sourceInterator-1][targetIterator]+1, d[sourceInterator][targetIterator-1]+1, d[sourceInterator-1][targetIterator-1] + cost);
+                d[sourceInterator][targetIterator] = minimum(
+                        d[sourceInterator-1][targetIterator] + 1,
+                        d[sourceInterator][targetIterator-1] + 1,
+                        d[sourceInterator-1][targetIterator-1] + cost);
             }
 
         }
@@ -62,7 +66,7 @@ public class StringDistanceAlgorithm {
         return d[sourceLength][targetLength];
     }
 
-    private static int minimum(int a, int b, int c) {
-        return Math.min(Math.min(a,b), c);
+    private static int minimum(int deletionCost, int insertionCost, int substitutionCost) {
+        return Math.min(Math.min(deletionCost,insertionCost), substitutionCost);
     }
 }

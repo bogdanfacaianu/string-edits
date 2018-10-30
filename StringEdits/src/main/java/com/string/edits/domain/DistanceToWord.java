@@ -14,6 +14,11 @@ public class DistanceToWord {
         this.distance = 0;
     }
 
+    public DistanceToWord(String word, int distance) {
+        this.word = word;
+        this.distance = distance;
+    }
+
     public String getWord() {
         return word;
     }
@@ -32,6 +37,10 @@ public class DistanceToWord {
 
     public void setEdits(List<WordEdits> edits) {
         this.edits = edits;
+    }
+
+    public boolean equalDistanceTo(int givenDistance) {
+        return this.distance == givenDistance;
     }
 
     @Override

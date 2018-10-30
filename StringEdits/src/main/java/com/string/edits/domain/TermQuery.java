@@ -8,6 +8,10 @@ public class TermQuery {
     private String term;
     private List<DistanceToWord> matches;
 
+    public TermQuery(String term) {
+        this.term = term;
+    }
+
     public String getTerm() {
         return term;
     }

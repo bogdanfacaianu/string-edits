@@ -4,49 +4,66 @@ import com.github.liblevenshtein.transducer.Algorithm;
 import com.github.liblevenshtein.transducer.Candidate;
 import com.github.liblevenshtein.transducer.ITransducer;
 import com.github.liblevenshtein.transducer.factory.TransducerBuilder;
-import com.string.edits.persistence.repository.LanguageRepository;
 
-import java.util.Collection;
+import com.string.edits.service.DictionaryService;
+import java.util.Optional;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TransducerCreator {
 
-    private LanguageRepository languageRepository;
+    private final DictionaryService dictionaryService;
 
-    public TransducerCreator(LanguageRepository languageRepository) {
-        this.languageRepository = languageRepository;
+    @Autowired
+    public TransducerCreator(DictionaryService dictionaryService) {
+        this.dictionaryService = dictionaryService;
     }
 
-    public ITransducer<Candidate> createSearchDictionary(Collection<String> dictionary) {
+    public Optional<ITransducer<Candidate>> createSearchDictionary(String languageName) {
+        Set<String> dictionaryEntries = dictionaryService.getDictionaryEntries(languageName);
+        if (dictionaryEntries.isEmpty()) {
+            return Optional.empty();
+        }
         ITransducer<Candidate> transducer = new TransducerBuilder()
-                .dictionary(dictionary)
+                .dictionary(dictionaryEntries)
                 .algorithm(Algorithm.STANDARD)
                 .defaultMaxDistance(5)
                 .includeDistance(true)
                 .build();
 
-        return transducer;
+        return Optional.ofNullable(transducer);
     }
 
-    public ITransducer<Candidate> createSearchDictionaryWithAlgorithmType(Collection<String> dictionary, Algorithm algorithmType) {
+    public Optional<ITransducer<Candidate>> createSearchDictionaryWithAlgorithmType(String languageName, Algorithm algorithmType) {
+        Set<String> dictionaryEntries = dictionaryService.getDictionaryEntries(languageName);
+        if (dictionaryEntries.isEmpty()) {
+            return Optional.empty();
+        }
         ITransducer<Candidate> transducer = new TransducerBuilder()
-                .dictionary(dictionary)
-                .algorithm(algorithmType)
-                .defaultMaxDistance(5)
-                .includeDistance(true)
-                .build();
+            .dictionary(dictionaryEntries)
+            .algorithm(algorithmType)
+            .defaultMaxDistance(5)
+            .includeDistance(true)
+            .build();
 
-        return transducer;
+        return Optional.ofNullable(transducer);
     }
 
-    public ITransducer<Candidate> createSearchDictionaryWithAlgorithmTypeAndMaxDistance(Collection<String> dictionary, Algorithm algorithmType, int maxDistance) {
+    public Optional<ITransducer<Candidate>> createSearchDictionaryWithAlgorithmTypeAndMaxDistance(String languageName, Algorithm algorithmType, int maxDistance) {
+        Set<String> dictionaryEntries = dictionaryService.getDictionaryEntries(languageName);
+        if (dictionaryEntries.isEmpty()) {
+            return Optional.empty();
+        }
         ITransducer<Candidate> transducer = new TransducerBuilder()
-                .dictionary(dictionary)
-                .algorithm(algorithmType)
-                .defaultMaxDistance(maxDistance)
-                .includeDistance(true)
-                .build();
+            .dictionary(dictionaryEntries)
+            .algorithm(algorithmType)
+            .defaultMaxDistance(maxDistance)
+            .includeDistance(true)
+            .build();
 
-        return transducer;
+        return Optional.ofNullable(transducer);
     }
 
 }

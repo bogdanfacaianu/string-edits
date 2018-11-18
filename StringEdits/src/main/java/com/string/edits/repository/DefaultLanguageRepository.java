@@ -2,10 +2,13 @@ package com.string.edits.repository;
 
 import com.string.edits.domain.Language;
 import com.string.edits.persistence.repository.LanguageRepository;
-
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultLanguageRepository implements LanguageRepository {
+
+    private Logger LOG = LoggerFactory.getLogger(DefaultLanguageRepository.class);
 
     private Map<String, Language> languageRepository;
 
@@ -19,15 +22,21 @@ public class DefaultLanguageRepository implements LanguageRepository {
 
     public void addPatternToLanguage(String languageName, String pattern) {
         Language languageEntity = languageRepository.get(languageName);
-        languageEntity.addPattern(pattern);
-        save(languageEntity);
-    }
-
-    public void findPatternInLanguage() {
-
+        if (languageEntity == null) {
+            LOG.error("Language not found in repository for {}", languageName);
+            return;
+        } else {
+            languageEntity.addPattern(pattern);
+            save(languageEntity);
+        }
     }
 
     public void delete(String languageName) {
         languageRepository.remove(languageName);
+    }
+
+    @Override
+    public Language findLanguage(String name) {
+        return languageRepository.get(name);
     }
 }

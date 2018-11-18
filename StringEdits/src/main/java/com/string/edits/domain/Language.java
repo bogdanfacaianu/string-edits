@@ -1,19 +1,19 @@
 package com.string.edits.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Language {
 
     private String name;
-    private List<String> dictionary = new ArrayList<>();
+    private Set<String> dictionary = new HashSet<>();
 
     public Language(String name) {
         this.name = name;
     }
 
-    public Language(String name, List<String> dictionary) {
+    public Language(String name, Set<String> dictionary) {
         this.name = name;
         this.dictionary = dictionary;
     }
@@ -26,11 +26,11 @@ public class Language {
         this.name = name;
     }
 
-    public List<String> getDictionary() {
+    public Set<String> getDictionary() {
         return dictionary;
     }
 
-    public void setDictionary(List<String> dictionary) {
+    public void setDictionary(Set<String> dictionary) {
         this.dictionary = dictionary;
     }
 

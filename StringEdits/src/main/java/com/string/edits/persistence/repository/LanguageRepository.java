@@ -10,4 +10,6 @@ public interface LanguageRepository {
 
     void delete(String languageName);
 
+    Language findLanguage(String name);
+
 }

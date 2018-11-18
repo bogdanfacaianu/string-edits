@@ -5,7 +5,6 @@ package com.string.edits.persistence.algorithm;
 *   https://people.cs.pitt.edu/~kirk/cs1501/Pruhs/Spring2006/assignments/editdistance/Levenshtein%20Distance.htm *
 *****************************************************************************************************************/
 
-@Deprecated
 public class StringDistanceAlgorithm {
 
     public static int computeDistance(String source, String target) {

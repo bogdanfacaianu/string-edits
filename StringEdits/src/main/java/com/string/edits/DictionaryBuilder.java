@@ -5,12 +5,28 @@ import com.github.liblevenshtein.transducer.ITransducer;
 import com.string.edits.domain.DistanceToWord;
 import com.string.edits.domain.Language;
 import com.string.edits.domain.TermQuery;
+import com.string.edits.service.DictionaryService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class DictionaryBuilder {
+
+    private final TransducerCreator transducerCreator;
+    private final DictionaryService dictionaryService;
+
+    public DictionaryBuilder(TransducerCreator transducerCreator, DictionaryService dictionaryService) {
+        this.transducerCreator = transducerCreator;
+        this.dictionaryService = dictionaryService;
+    }
+
+    public void buildDictionary(String languageName, Set<String> entries) {
+        Language language = new Language(languageName, entries);
+        dictionaryService.saveLanguage(language);
+    }
 
     private void computeResults(ITransducer<Candidate> transducer, String searchTerm) {
 

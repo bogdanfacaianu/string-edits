@@ -1,13 +1,13 @@
-package com.string.edits;
+package com.string.edits.service;
 
 import com.github.liblevenshtein.transducer.Candidate;
 import com.github.liblevenshtein.transducer.ITransducer;
 import com.string.edits.domain.DistanceToWord;
 import com.string.edits.domain.Language;
 import com.string.edits.domain.TermQuery;
-import com.string.edits.service.DictionaryService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
@@ -28,11 +28,17 @@ public class DictionaryBuilder {
         dictionaryService.saveLanguage(language);
     }
 
+    public Optional<ITransducer<Candidate>> buildDictionary(Language language) {
+        dictionaryService.saveLanguage(language);
+        return transducerCreator.createSearchDictionary(language.getName());
+
+    }
+
     private void computeResults(ITransducer<Candidate> transducer, String searchTerm) {
 
     }
 
-    private TermQuery getMinimumWordsWithDistances(ITransducer<Candidate> transducer, String searchTerm) {
+    public TermQuery getMinimumWordsWithDistances(ITransducer<Candidate> transducer, String searchTerm) {
         List<DistanceToWord> results = new ArrayList<>();
         for (final Candidate candidate : transducer.transduce(searchTerm)) {
             DistanceToWord dtw = new DistanceToWord(candidate.term(), candidate.distance());

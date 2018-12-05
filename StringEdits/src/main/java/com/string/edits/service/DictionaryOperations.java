@@ -5,7 +5,6 @@ import com.github.liblevenshtein.transducer.ITransducer;
 import com.string.edits.domain.Language;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.persistence.algorithm.StringDistanceAlgorithm;
-import com.string.edits.service.DictionaryBuilder;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,12 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DictionaryOperations {
 
-    private final DictionaryBuilder dictionaryBuilder;
-
     @Autowired
-    public DictionaryOperations(DictionaryBuilder dictionaryBuilder) {
-        this.dictionaryBuilder = dictionaryBuilder;
-    }
+    private DictionaryBuilder dictionaryBuilder;
 
     public int getDistanceBetween(String source, String target) {
         return StringDistanceAlgorithm.computeDistance(source, target);

@@ -1,8 +1,10 @@
+package com.stringedits.testrunner;
+
 import com.github.liblevenshtein.transducer.Candidate;
 import com.github.liblevenshtein.transducer.ITransducer;
-import com.string.edits.DictionaryOperations;
 import com.string.edits.domain.Language;
 import com.string.edits.domain.TermQuery;
+import com.string.edits.service.DictionaryOperations;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;

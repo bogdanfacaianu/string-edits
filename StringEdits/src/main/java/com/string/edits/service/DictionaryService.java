@@ -6,17 +6,15 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+@Component
 @Service
 public class DictionaryService {
 
-    private final LanguageRepository languageRepository;
-
     @Autowired
-    public DictionaryService(LanguageRepository languageRepository) {
-        this.languageRepository = languageRepository;
-    }
+    private LanguageRepository languageRepository;
 
     public Optional<Language> findLanguageByName(String languageName) {
         return Optional.ofNullable(languageRepository.findLanguage(languageName));

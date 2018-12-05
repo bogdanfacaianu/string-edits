@@ -3,12 +3,12 @@ package com.string.edits.repository;
 import com.string.edits.domain.Language;
 import com.string.edits.persistence.repository.LanguageRepository;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class DefaultLanguageRepository implements LanguageRepository {
 
-    private Logger LOG = LoggerFactory.getLogger(DefaultLanguageRepository.class);
+//    private Logger LOG = LoggerFactory.getLogger(DefaultLanguageRepository.class);
 
     private Map<String, Language> languageRepository;
 
@@ -23,7 +23,7 @@ public class DefaultLanguageRepository implements LanguageRepository {
     public void addPatternToLanguage(String languageName, String pattern) {
         Language languageEntity = languageRepository.get(languageName);
         if (languageEntity == null) {
-            LOG.error("Language not found in repository for {}", languageName);
+//            LOG.error("Language not found in repository for {}", languageName);
             return;
         } else {
             languageEntity.addPattern(pattern);

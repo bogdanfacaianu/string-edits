@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +19,7 @@ public class DictionaryBuilder {
     private final TransducerCreator transducerCreator;
     private final DictionaryService dictionaryService;
 
+    @Autowired
     public DictionaryBuilder(TransducerCreator transducerCreator, DictionaryService dictionaryService) {
         this.transducerCreator = transducerCreator;
         this.dictionaryService = dictionaryService;

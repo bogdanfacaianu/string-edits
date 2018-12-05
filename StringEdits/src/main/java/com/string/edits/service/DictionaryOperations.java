@@ -1,4 +1,4 @@
-package com.string.edits;
+package com.string.edits.service;
 
 import com.github.liblevenshtein.transducer.Candidate;
 import com.github.liblevenshtein.transducer.ITransducer;
@@ -8,30 +8,32 @@ import com.string.edits.persistence.algorithm.StringDistanceAlgorithm;
 import com.string.edits.service.DictionaryBuilder;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class HelloWorld {
+@Component
+public class DictionaryOperations {
 
-    private static DictionaryBuilder dictionaryBuilder;
+    private final DictionaryBuilder dictionaryBuilder;
 
     @Autowired
-    public HelloWorld(DictionaryBuilder dictionaryBuilder) {
+    public DictionaryOperations(DictionaryBuilder dictionaryBuilder) {
         this.dictionaryBuilder = dictionaryBuilder;
     }
 
-    public static int getDistanceBetween(String source, String target) {
+    public int getDistanceBetween(String source, String target) {
         return StringDistanceAlgorithm.computeDistance(source, target);
     }
 
-    public static TermQuery getSolutions(ITransducer<Candidate> transducer, String searchTerm) {
+    public TermQuery getSolutions(ITransducer<Candidate> transducer, String searchTerm) {
         TermQuery minimumWordsWithDistances = dictionaryBuilder.getMinimumWordsWithDistances(transducer, searchTerm);
         return minimumWordsWithDistances;
     }
 
-    public static TermQuery returnResults(ITransducer<Candidate> transducer, String searchTerm) {
+    public TermQuery returnResults(ITransducer<Candidate> transducer, String searchTerm) {
         return (TermQuery) getSolutions(transducer, searchTerm);
     }
 
-    public static Optional<ITransducer<Candidate>> buildTransducerForLanguage(Language language) {
+    public Optional<ITransducer<Candidate>> buildTransducerForLanguage(Language language) {
         return dictionaryBuilder.buildDictionary(language);
     }
 }

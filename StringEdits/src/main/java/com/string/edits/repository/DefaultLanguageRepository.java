@@ -1,42 +1,43 @@
 package com.string.edits.repository;
 
+import com.google.gson.Gson;
 import com.string.edits.domain.Language;
 import com.string.edits.persistence.repository.LanguageRepository;
-import java.util.Map;
-import org.springframework.stereotype.Repository;
+import com.thehutgroup.fusion.couchbase.entities.CouchbaseClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class DefaultLanguageRepository implements LanguageRepository {
 
-//    private Logger LOG = LoggerFactory.getLogger(DefaultLanguageRepository.class);
+    private final CouchbaseClient couchbaseClient;
+    private final Gson gson;
 
-    private Map<String, Language> languageRepository;
-
-    public DefaultLanguageRepository(Map<String, Language> languageRepository) {
-        this.languageRepository = languageRepository;
-    }
-
-    public void save(Language language) {
-        languageRepository.put(language.getName(), language);
-    }
-
-    public void addPatternToLanguage(String languageName, String pattern) {
-        Language languageEntity = languageRepository.get(languageName);
-        if (languageEntity == null) {
-//            LOG.error("Language not found in repository for {}", languageName);
-            return;
-        } else {
-            languageEntity.addPattern(pattern);
-            save(languageEntity);
-        }
-    }
-
-    public void delete(String languageName) {
-        languageRepository.remove(languageName);
+    @Autowired
+    public DefaultLanguageRepository(CouchbaseClient couchbaseClient, Gson gson) {
+        this.couchbaseClient = couchbaseClient;
+        this.gson = gson;
     }
 
     @Override
-    public Language findLanguage(String name) {
-        return languageRepository.get(name);
+    public void save(Language language) {
+        couchbaseClient.upsert(language.getName(), gson.toJson(language));
+    }
+
+    @Override
+    public void addPatternToLanguage(String languageName, String pattern) {
+        Language language = findLanguage(languageName);
+        language.addPattern(pattern);
+        save(language);
+    }
+
+    @Override
+    public void delete(String languageName) {
+        couchbaseClient.remove(languageName);
+    }
+
+    @Override
+    public Language findLanguage(String languageName) {
+        return gson.fromJson(couchbaseClient.get(languageName), Language.class);
     }
 }

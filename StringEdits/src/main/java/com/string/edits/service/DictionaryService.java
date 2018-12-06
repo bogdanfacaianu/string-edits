@@ -31,4 +31,8 @@ public class DictionaryService {
     public void saveLanguage(Language language) {
         languageRepository.save(language);
     }
+
+    public void addPatternToLanguage(String languageName, String word) {
+        languageRepository.addPatternToLanguage(languageName, word);
+    }
 }

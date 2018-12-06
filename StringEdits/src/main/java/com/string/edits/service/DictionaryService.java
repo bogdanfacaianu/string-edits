@@ -31,5 +31,4 @@ public class DictionaryService {
     public void saveLanguage(Language language) {
         languageRepository.save(language);
     }
-
 }

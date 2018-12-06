@@ -25,18 +25,9 @@ public class DictionaryBuilder {
         this.dictionaryService = dictionaryService;
     }
 
-    public void buildDictionary(String languageName, Set<String> entries) {
-        Language language = new Language(languageName, entries);
-        dictionaryService.saveLanguage(language);
-    }
-
     public Optional<ITransducer<Candidate>> buildDictionary(Language language) {
         dictionaryService.saveLanguage(language);
         return transducerCreator.createSearchDictionary(language.getName());
-
-    }
-
-    private void computeResults(ITransducer<Candidate> transducer, String searchTerm) {
 
     }
 
@@ -46,35 +37,19 @@ public class DictionaryBuilder {
             DistanceToWord dtw = new DistanceToWord(candidate.term(), candidate.distance());
             results.add(dtw);
         }
-        List<Integer> distances = (List<Integer>) results.stream().mapToInt(DistanceToWord::getDistance);
-        int minimumDistance = distances.stream().min(Integer::compare).get();
+        List<Integer> distances = new ArrayList<>();
+        results.forEach(dtw -> distances.add(dtw.getDistance()));
+        int minimumDistance = distances.stream().min(Integer::compare).orElse(-1);
 
         TermQuery termQuery = new TermQuery(searchTerm);
-        List<DistanceToWord> filteredResults = results.stream()
-            .filter(dtw -> dtw.getDistance() == minimumDistance)
-            .collect(Collectors.toList());
-        termQuery.setMatches(filteredResults);
-        return termQuery;
-    }
-
-
-    public static void storeResults(ITransducer<Candidate> transducer, String searchTerm) {
-        Language language = new Language(searchTerm);
-    }
-
-    public static void displayOutput(ITransducer<Candidate> transducer) {
-        for (final String queryTerm : new String[]{"STAFICLA", "GUMBO", "COPRAC"}) {
-            System.out.println(
-                "+-------------------------------------------------------------------------------");
-            System.out.printf("| Spelling Candidates for Query Term: \"%s\"%n", queryTerm);
-            System.out.println(
-                "+-------------------------------------------------------------------------------");
-            for (final Candidate candidate : transducer.transduce(queryTerm)) {
-                System.out.printf("| d(\"%s\", \"%s\") = [%d]%n",
-                    queryTerm,
-                    candidate.term(),
-                    candidate.distance());
-            }
+        if (minimumDistance < 0) {
+            termQuery.setMatches(results);
+        } else {
+            List<DistanceToWord> filteredResults = results.stream()
+                .filter(dtw -> dtw.getDistance() == minimumDistance)
+                .collect(Collectors.toList());
+            termQuery.setMatches(filteredResults);
         }
+        return termQuery;
     }
 }

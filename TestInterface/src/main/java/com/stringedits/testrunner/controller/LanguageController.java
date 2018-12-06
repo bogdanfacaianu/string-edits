@@ -1,10 +1,7 @@
 package com.stringedits.testrunner.controller;
 
-import com.github.liblevenshtein.transducer.Candidate;
-import com.github.liblevenshtein.transducer.ITransducer;
 import com.string.edits.domain.Language;
 import com.string.edits.domain.TermQuery;
-import com.string.edits.service.DictionaryOperations;
 import com.string.edits.service.DictionaryService;
 import com.thehutgroup.fusion.core.services.HealthcheckService;
 import java.util.Optional;
@@ -18,17 +15,13 @@ public class LanguageController {
 
     private final HealthcheckService healthcheckService;
     private final DictionaryService dictionaryService;
-    private final DictionaryOperations dictionaryOperations;
 
     @Autowired
     public LanguageController(HealthcheckService healthcheckService,
-        DictionaryService dictionaryService,
-        DictionaryOperations dictionaryOperations) {
+        DictionaryService dictionaryService) {
         this.healthcheckService = healthcheckService;
         this.dictionaryService = dictionaryService;
-        this.dictionaryOperations = dictionaryOperations;
     }
-
 
     @RequestMapping("/healthcheck")
     public String healthcheck() {
@@ -49,18 +42,7 @@ public class LanguageController {
 
     @RequestMapping("/getMatches/{languageName}/{word}")
     public TermQuery getMatches(@PathVariable("languageName") String languageName, @PathVariable("word") String word) {
-        Optional<Language> languageOptional = dictionaryService.findLanguageByName(languageName);
-        if (languageOptional.isPresent()) {
-            Optional<ITransducer<Candidate>> optionalCandidateITransducer =
-                dictionaryOperations.buildTransducerForLanguage(languageOptional.get());
-
-            if (optionalCandidateITransducer.isPresent()) {
-                ITransducer<Candidate> transducer = optionalCandidateITransducer.get();
-                TermQuery termQuery = dictionaryOperations.returnResults(transducer, word);
-                return termQuery;
-            }
-        }
-        throw new RuntimeException();
+        return dictionaryService.getResultsForWord(languageName, word);
     }
 
     @RequestMapping("/listLanguage/{languageName}")

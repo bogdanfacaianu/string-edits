@@ -6,21 +6,10 @@ import com.github.liblevenshtein.transducer.ITransducer;
 import com.github.liblevenshtein.transducer.factory.TransducerBuilder;
 import java.util.Optional;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class TransducerCreator {
 
-    private final DictionaryService dictionaryService;
-
-    @Autowired
-    public TransducerCreator(DictionaryService dictionaryService) {
-        this.dictionaryService = dictionaryService;
-    }
-
-    public Optional<ITransducer<Candidate>> createSearchDictionary(String languageName) {
-        Set<String> dictionaryEntries = dictionaryService.getDictionaryEntries(languageName);
+    public static Optional<ITransducer<Candidate>> createSearchDictionary(Set<String> dictionaryEntries) {
         if (dictionaryEntries.isEmpty()) {
             return Optional.empty();
         }
@@ -34,8 +23,7 @@ public class TransducerCreator {
         return Optional.ofNullable(transducer);
     }
 
-    public Optional<ITransducer<Candidate>> createSearchDictionaryWithAlgorithmType(String languageName, Algorithm algorithmType) {
-        Set<String> dictionaryEntries = dictionaryService.getDictionaryEntries(languageName);
+    public static Optional<ITransducer<Candidate>> createSearchDictionaryWithAlgorithmType(Set<String> dictionaryEntries, Algorithm algorithmType) {
         if (dictionaryEntries.isEmpty()) {
             return Optional.empty();
         }
@@ -49,8 +37,7 @@ public class TransducerCreator {
         return Optional.ofNullable(transducer);
     }
 
-    public Optional<ITransducer<Candidate>> createSearchDictionaryWithAlgorithmTypeAndMaxDistance(String languageName, Algorithm algorithmType, int maxDistance) {
-        Set<String> dictionaryEntries = dictionaryService.getDictionaryEntries(languageName);
+    public static Optional<ITransducer<Candidate>> createSearchDictionaryWithAlgorithmTypeAndMaxDistance(Set<String> dictionaryEntries, Algorithm algorithmType, int maxDistance) {
         if (dictionaryEntries.isEmpty()) {
             return Optional.empty();
         }

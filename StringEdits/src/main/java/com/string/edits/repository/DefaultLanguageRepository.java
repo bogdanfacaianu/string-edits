@@ -5,9 +5,9 @@ import com.string.edits.domain.Language;
 import com.string.edits.persistence.repository.LanguageRepository;
 import com.thehutgroup.fusion.couchbase.entities.CouchbaseClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class DefaultLanguageRepository implements LanguageRepository {
 
     private final CouchbaseClient couchbaseClient;

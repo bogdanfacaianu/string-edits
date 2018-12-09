@@ -17,8 +17,11 @@ public class CouchbaseConfiguration {
     @Bean
     public CouchbaseClient getCouchbaseClient() {
         CouchbaseBucketConfig config =
-            new CouchbaseBucketConfig("bogdan", asList("localhost"), "StringEditsDB", 1000);
-        return CouchbaseClientFactory.getInstance().getCouchbaseClient(config);
+            new CouchbaseBucketConfig("bogdan", asList("aws.couchbase"), "StringEditsDB", 1000);
+
+        CouchbaseBucketConfig config1 =
+            new CouchbaseBucketConfig("bogdan", asList("local.couchbase"), "StringEditsDB", 1000);
+        return CouchbaseClientFactory.getInstance().getCouchbaseClient(config1);
     }
 
     @Bean

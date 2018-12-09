@@ -41,4 +41,8 @@ public class DictionaryService {
         }
         return termQuery;
     }
+
+    public void removeLanguage(String languageName) {
+        languageRepository.delete(languageName);
+    }
 }

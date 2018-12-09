@@ -4,7 +4,12 @@ import com.string.edits.domain.Language;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.service.DictionaryService;
 import com.thehutgroup.fusion.core.services.HealthcheckService;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Scanner;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +56,27 @@ public class LanguageController {
         if (languageOptional.isPresent()) {
             return languageOptional.get();
         }
-        throw new RuntimeException();
+        return new Language(null);
+    }
+
+    @RequestMapping("/loadEnglishWords")
+    public Language loadEnglishWordsFromFile() throws FileNotFoundException {
+        String path = getClass().getClassLoader().getResource("dictionary/words.txt").getPath();
+        Scanner file = new Scanner(new File(path));
+
+        Set<String> words = new HashSet<>();
+        while (file.hasNext()) {
+            words.add(file.next().toLowerCase());
+        }
+
+        Language language = new Language("english", words);
+        dictionaryService.saveLanguage(language);
+        return language;
+    }
+
+    @RequestMapping("/removeLanguage/{languageName}")
+    public String removeLanguage(@PathVariable("languageName") String languageName) {
+        dictionaryService.removeLanguage(languageName);
+        return "Removed: " + languageName;
     }
 }

@@ -1,9 +1,9 @@
 package com.string.edits.repository;
 
 import com.google.gson.Gson;
+import com.string.edits.couchbase.entities.CouchbaseClient;
 import com.string.edits.domain.Language;
 import com.string.edits.persistence.repository.LanguageRepository;
-import com.thehutgroup.fusion.couchbase.entities.CouchbaseClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

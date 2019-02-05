@@ -3,7 +3,6 @@ package com.stringedits.testrunner.controller;
 import com.string.edits.domain.Language;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.service.DictionaryService;
-import com.thehutgroup.fusion.core.services.HealthcheckService;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
@@ -18,19 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LanguageController {
 
-    private final HealthcheckService healthcheckService;
     private final DictionaryService dictionaryService;
 
     @Autowired
-    public LanguageController(HealthcheckService healthcheckService,
-        DictionaryService dictionaryService) {
-        this.healthcheckService = healthcheckService;
+    public LanguageController(DictionaryService dictionaryService) {
         this.dictionaryService = dictionaryService;
-    }
-
-    @RequestMapping("/healthcheck")
-    public String healthcheck() {
-        return healthcheckService.createHealthcheckStatusMessage().getMessage();
     }
 
     @RequestMapping("/add/{languageName}/{word}")

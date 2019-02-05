@@ -19,8 +19,11 @@ public class DictionaryOperations {
         return StringDistanceAlgorithm.computeDistance(source, target);
     }
 
-    public TermQuery getSolutions(Language language, String searchTerm) {
-        Optional<ITransducer<Candidate>> transducer = TransducerCreator.createSearchDictionary(language.getDictionary());
+    public TermQuery getSolutions(Language language, String searchTerm, int maxDistance) {
+        if (maxDistance < 1) {
+            maxDistance = 5;
+        }
+        Optional<ITransducer<Candidate>> transducer = TransducerCreator.createSearchDictionaryWithMaxDistance(language.getDictionary(), maxDistance);
         if (transducer.isPresent()) {
             TermQuery minimumWordsWithDistances = getMinimumWordsWithDistances(transducer.get(), searchTerm);
             return minimumWordsWithDistances;
@@ -28,8 +31,8 @@ public class DictionaryOperations {
         return new TermQuery(searchTerm);
     }
 
-    public TermQuery returnResults(Language language, String searchTerm) {
-        return getSolutions(language, searchTerm);
+    public TermQuery returnResults(Language language, String searchTerm, int maxDistance) {
+        return getSolutions(language, searchTerm, maxDistance);
     }
 
     public TermQuery getMinimumWordsWithDistances(ITransducer<Candidate> transducer, String searchTerm) {

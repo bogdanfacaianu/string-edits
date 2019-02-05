@@ -3,7 +3,6 @@ package com.stringedits.testrunner.controller;
 import com.string.edits.domain.Language;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.service.DictionaryService;
-import com.thehutgroup.fusion.core.services.HealthcheckService;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
@@ -18,19 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LanguageController {
 
-    private final HealthcheckService healthcheckService;
     private final DictionaryService dictionaryService;
 
     @Autowired
-    public LanguageController(HealthcheckService healthcheckService,
-        DictionaryService dictionaryService) {
-        this.healthcheckService = healthcheckService;
+    public LanguageController(DictionaryService dictionaryService) {
         this.dictionaryService = dictionaryService;
-    }
-
-    @RequestMapping("/healthcheck")
-    public String healthcheck() {
-        return healthcheckService.createHealthcheckStatusMessage().getMessage();
     }
 
     @RequestMapping("/add/{languageName}/{word}")
@@ -47,7 +38,12 @@ public class LanguageController {
 
     @RequestMapping("/getMatches/{languageName}/{word}")
     public TermQuery getMatches(@PathVariable("languageName") String languageName, @PathVariable("word") String word) {
-        return dictionaryService.getResultsForWord(languageName, word);
+        return dictionaryService.getResultsForWord(languageName, word, 5);
+    }
+
+    @RequestMapping("/getMatches/{languageName}/{word}/withMaxDistance/{maxDistance}")
+    public TermQuery getMatchesWithMaxDistance(@PathVariable("languageName") String languageName, @PathVariable("word") String word, @PathVariable("maxDistance") int maxDistance) {
+        return dictionaryService.getResultsForWord(languageName, word, maxDistance);
     }
 
     @RequestMapping("/listLanguage/{languageName}")

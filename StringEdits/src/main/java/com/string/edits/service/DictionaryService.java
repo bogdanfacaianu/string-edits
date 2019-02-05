@@ -33,11 +33,11 @@ public class DictionaryService {
         languageRepository.addPatternToLanguage(languageName, word);
     }
 
-    public TermQuery getResultsForWord(String languageName, String word) {
+    public TermQuery getResultsForWord(String languageName, String word, int maxDistance) {
         TermQuery termQuery = new TermQuery(word);
         Optional<Language> languageOptional = findLanguageByName(languageName);
         if (languageOptional.isPresent()) {
-            termQuery = dictionaryOperations.returnResults(languageOptional.get(), word);
+            termQuery = dictionaryOperations.returnResults(languageOptional.get(), word, maxDistance);
         }
         return termQuery;
     }

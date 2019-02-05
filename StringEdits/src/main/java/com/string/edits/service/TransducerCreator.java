@@ -9,16 +9,16 @@ import java.util.Set;
 
 public class TransducerCreator {
 
-    public static Optional<ITransducer<Candidate>> createSearchDictionary(Set<String> dictionaryEntries) {
+    public static Optional<ITransducer<Candidate>> createSearchDictionaryWithMaxDistance(Set<String> dictionaryEntries, int maxDistance) {
         if (dictionaryEntries.isEmpty()) {
             return Optional.empty();
         }
         ITransducer<Candidate> transducer = new TransducerBuilder()
-                .dictionary(dictionaryEntries)
-                .algorithm(Algorithm.STANDARD)
-                .defaultMaxDistance(5)
-                .includeDistance(true)
-                .build();
+            .dictionary(dictionaryEntries)
+            .algorithm(Algorithm.STANDARD)
+            .defaultMaxDistance(maxDistance)
+            .includeDistance(true)
+            .build();
 
         return Optional.ofNullable(transducer);
     }

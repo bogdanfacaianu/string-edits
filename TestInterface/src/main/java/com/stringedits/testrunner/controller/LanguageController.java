@@ -38,7 +38,12 @@ public class LanguageController {
 
     @RequestMapping("/getMatches/{languageName}/{word}")
     public TermQuery getMatches(@PathVariable("languageName") String languageName, @PathVariable("word") String word) {
-        return dictionaryService.getResultsForWord(languageName, word);
+        return dictionaryService.getResultsForWord(languageName, word, 5);
+    }
+
+    @RequestMapping("/getMatches/{languageName}/{word}/withMaxDistance/{maxDistance}")
+    public TermQuery getMatchesWithMaxDistance(@PathVariable("languageName") String languageName, @PathVariable("word") String word, @PathVariable("maxDistance") int maxDistance) {
+        return dictionaryService.getResultsForWord(languageName, word, maxDistance);
     }
 
     @RequestMapping("/listLanguage/{languageName}")

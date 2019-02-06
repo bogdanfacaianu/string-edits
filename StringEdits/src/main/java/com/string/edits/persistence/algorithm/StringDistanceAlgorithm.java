@@ -8,11 +8,11 @@ package com.string.edits.persistence.algorithm;
 public class StringDistanceAlgorithm {
 
     public static int computeDistance(String source, String target) {
-        int d[][]; // matrix
-        int sourceLength; // length of s
-        int targetLength; // length of t
-        int sourceInterator; // iterates through s
-        int targetIterator; // iterates through t
+        int matrix[][]; // matrix
+        int sourceLength; // length of source
+        int targetLength; // length of target
+        int sourceIndex; // iterates through source
+        int targetIndex; // iterates through target
         char sourceCharacterAtIndex; // ith character of s
         char targetCharacterAtIndex; // jth character of t
         int cost; // cost
@@ -26,23 +26,23 @@ public class StringDistanceAlgorithm {
         if (targetLength == 0) {
             return sourceLength;
         }
-        d = new int[sourceLength+1][targetLength+1];
+        matrix = new int[sourceLength+1][targetLength+1];
 
         // Step 2
-        for (sourceInterator = 0; sourceInterator <= sourceLength; sourceInterator++) {
-            d[sourceInterator][0] = sourceInterator;
+        for (sourceIndex = 0; sourceIndex <= sourceLength; sourceIndex++) {
+            matrix[sourceIndex][0] = sourceIndex;
         }
-        for (targetIterator = 0; targetIterator <= targetLength; targetIterator++) {
-            d[0][targetIterator] = targetIterator;
+        for (targetIndex = 0; targetIndex <= targetLength; targetIndex++) {
+            matrix[0][targetIndex] = targetIndex;
         }
 
         // Step 3
-        for (sourceInterator = 1; sourceInterator <= sourceLength; sourceInterator++) {
-            sourceCharacterAtIndex = source.charAt(sourceInterator - 1);
+        for (sourceIndex = 1; sourceIndex <= sourceLength; sourceIndex++) {
+            sourceCharacterAtIndex = source.charAt(sourceIndex - 1);
 
             // Step 4
-            for (targetIterator = 1; targetIterator <= targetLength; targetIterator++) {
-                targetCharacterAtIndex = target.charAt(targetIterator - 1);
+            for (targetIndex = 1; targetIndex <= targetLength; targetIndex++) {
+                targetCharacterAtIndex = target.charAt(targetIndex - 1);
 
                 // Step 5
                 if (sourceCharacterAtIndex == targetCharacterAtIndex) {
@@ -53,16 +53,16 @@ public class StringDistanceAlgorithm {
                 }
 
                 // Step 6
-                d[sourceInterator][targetIterator] = minimum(
-                        d[sourceInterator-1][targetIterator] + 1,
-                        d[sourceInterator][targetIterator-1] + 1,
-                        d[sourceInterator-1][targetIterator-1] + cost);
+                matrix[sourceIndex][targetIndex] = minimum(
+                        matrix[sourceIndex-1][targetIndex] + 1,
+                        matrix[sourceIndex][targetIndex-1] + 1,
+                        matrix[sourceIndex-1][targetIndex-1] + cost);
             }
 
         }
 
         // Step 7
-        return d[sourceLength][targetLength];
+        return matrix[sourceLength][targetLength];
     }
 
     private static int minimum(int deletionCost, int insertionCost, int substitutionCost) {

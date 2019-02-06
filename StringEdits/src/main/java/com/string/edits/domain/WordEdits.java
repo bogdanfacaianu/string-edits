@@ -8,6 +8,7 @@ public class WordEdits {
     private int editIndex;
     // applicable for all but deletion
     private char potentialSolution;
+    // transposition looks fucked up tho
 
 
     public WordEdits(EditType editType, int editIndex) {

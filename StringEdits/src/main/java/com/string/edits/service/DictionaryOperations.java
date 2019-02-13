@@ -15,10 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DictionaryOperations {
 
-    public int getDistanceBetween(String source, String target) {
-        return StringDistanceAlgorithm.computeDistance(source, target);
-    }
-
     public TermQuery getSolutions(Language language, String searchTerm, int maxDistance) {
         if (maxDistance < 1) {
             maxDistance = 5;
@@ -38,7 +34,7 @@ public class DictionaryOperations {
     public TermQuery getMinimumWordsWithDistances(ITransducer<Candidate> transducer, String searchTerm) {
         List<DistanceToWord> results = new ArrayList<>();
         for (final Candidate candidate : transducer.transduce(searchTerm)) {
-            DistanceToWord dtw = new DistanceToWord(candidate.term(), candidate.distance());
+            DistanceToWord dtw = StringDistanceAlgorithm.computeDistance(searchTerm, candidate.term());
             results.add(dtw);
         }
         List<Integer> distances = new ArrayList<>();

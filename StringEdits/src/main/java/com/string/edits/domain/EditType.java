@@ -1,8 +1,8 @@
 package com.string.edits.domain;
 
 public enum EditType {
-    INSERT, // horizontal move
-    DELETE, // vertical move
-    REPLACE, // diagonal move (if equal then no change)
-    TRANSPOSE // ?????
+    INSERTION, // horizontal move
+    DELETETION, // vertical move
+    SUBSTITUTION, // diagonal move (if equal then no change)
+    TRANSPOSITION // sort of double substitution here on check
 }

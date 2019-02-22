@@ -96,25 +96,26 @@ public class StringDistanceAlgorithm {
 
     private static List<WordEdits> addEdits(int[][] matrix, int sourceLength, int targetLength, String source, String target) {
         List<WordEdits> edits = new ArrayList<>();
-        for (int i = targetLength - 1; i > 2; i--) {
-            char targetCharacterAtIndex = target.charAt(i - 1);
-            for (int j = sourceLength - 1; j > 2; j--) {
-                char sourceCharacterAtIndex = source.charAt(j- 1);
 
-                if (matrix[i - 1][j - 1] <= matrix[i-1][j] && matrix[i - 1][j - 1] <= matrix[i][j-1]) {
-                    if (matrix[i - 1][j - 1] - matrix[i][j] <= 0) {
-                        if (matrix[i - 1][j - 1] - matrix[i][j] == -1) {
+        for (int i = sourceLength - 1; i > 2; i--) {
+            char sourceCharacterAtIndex = source.charAt(i - 1);
+            for (int j = targetLength - 1; j > 2; j--) {
+                char targetCharacterAtIndex = target.charAt(j - 1);
+
+                if (matrix[i - 1][j - 1] <= matrix[i - 1][j] || matrix[i - 1][j - 1] <= matrix[i][j - 1]) {
+                    if ((matrix[i][j] - matrix[i - 1][j - 1] == 1) || (matrix[i - 1][j - 1] == matrix[i][j])) {
+                        if (matrix[i][j] - matrix[i - 1][j - 1] == 1) {
                             edits.add(new WordEdits(EditType.SUBSTITUTION, i, sourceCharacterAtIndex, targetCharacterAtIndex));
                         }
                     }
                 }
-                if (matrix[i][j-1] <= matrix[i-1][j]) {
-                    if ((matrix[i][j - 1] == matrix[i][j]) || (matrix[i][j] - matrix[i][j - 1] <= 0)) {
+                if (matrix[i][j - 1] <= matrix[i - 1][j]) {
+                    if ((matrix[i][j - 1] == matrix[i][j]) || (matrix[i][j] - matrix[i][j - 1] == 1)) {
                         edits.add(new WordEdits(EditType.INSERTION, j - 1, sourceCharacterAtIndex, targetCharacterAtIndex));
-                        j--;
+                        j++;
                     } else {
                         edits.add(new WordEdits(EditType.DELETETION, j - 1, sourceCharacterAtIndex));
-                        i--;
+                        i++;
                     }
                 }
             }
@@ -124,6 +125,6 @@ public class StringDistanceAlgorithm {
     }
 
     public static void main(String[] args) {
-        System.out.println("\n" + computeDistance("staficla", "stafida"));
+        System.out.println("\n" + computeDistance("computer", "cmputer"));
     }
 }

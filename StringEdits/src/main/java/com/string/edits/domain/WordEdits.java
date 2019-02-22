@@ -86,7 +86,7 @@ public class WordEdits {
     public String toString() {
         return "WordEdits{" +
             "editType=" + editType +
-            "foundCharacter=" + foundCharacter +
+            ", foundCharacter=" + foundCharacter +
             ", potentialSolution=" + potentialSolution +
             ", at editIndex=" + editIndex +
             '}';

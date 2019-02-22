@@ -36,14 +36,16 @@ public class LanguageController {
         return "OK: " + languageName + " created";
     }
 
-    @RequestMapping("/getMatches/{languageName}/{word}")
-    public TermQuery getMatches(@PathVariable("languageName") String languageName, @PathVariable("word") String word) {
-        return dictionaryService.getResultsForWord(languageName, word, 5);
+    @RequestMapping(value = "/getMatches/{languageName}/{word}", produces = "application/json")
+    public String getMatches(@PathVariable("languageName") String languageName, @PathVariable("word") String word) {
+        TermQuery resultsForWord = dictionaryService.getResultsForWord(languageName, word, 5);
+        return dictionaryService.convertToJsonOutput(resultsForWord);
     }
 
-    @RequestMapping("/getMatches/{languageName}/{word}/withMaxDistance/{maxDistance}")
-    public TermQuery getMatchesWithMaxDistance(@PathVariable("languageName") String languageName, @PathVariable("word") String word, @PathVariable("maxDistance") int maxDistance) {
-        return dictionaryService.getResultsForWord(languageName, word, maxDistance);
+    @RequestMapping(value = "/getMatches/{languageName}/{word}/withMaxDistance/{maxDistance}", produces = "application/json")
+    public String getMatchesWithMaxDistance(@PathVariable("languageName") String languageName, @PathVariable("word") String word, @PathVariable("maxDistance") int maxDistance) {
+        TermQuery resultsForWord = dictionaryService.getResultsForWord(languageName, word, maxDistance);
+        return dictionaryService.convertToJsonOutput(resultsForWord);
     }
 
     @RequestMapping("/listLanguage/{languageName}")

@@ -34,7 +34,7 @@ public class DictionaryOperations {
     public TermQuery getMinimumWordsWithDistances(ITransducer<Candidate> transducer, String searchTerm) {
         List<DistanceToWord> results = new ArrayList<>();
         for (final Candidate candidate : transducer.transduce(searchTerm)) {
-            DistanceToWord dtw = StringDistanceAlgorithm.computeDistance(searchTerm, candidate.term());
+            DistanceToWord dtw = new DistanceToWord(candidate.term(), candidate.distance());
             results.add(dtw);
         }
         List<Integer> distances = new ArrayList<>();
@@ -50,6 +50,17 @@ public class DictionaryOperations {
                 .collect(Collectors.toList());
             termQuery.setMatches(filteredResults);
         }
+
+        setEditsToMatches(termQuery, searchTerm);
+
         return termQuery;
+    }
+
+    private void setEditsToMatches(TermQuery termQuery, String searchTerm) {
+        List<DistanceToWord> withEdits = new ArrayList<>();
+        for (DistanceToWord dtw : termQuery.getMatches()) {
+            withEdits.add(StringDistanceAlgorithm.computeDistance(searchTerm, dtw.getWord()));
+        }
+        termQuery.setMatches(withEdits);
     }
 }

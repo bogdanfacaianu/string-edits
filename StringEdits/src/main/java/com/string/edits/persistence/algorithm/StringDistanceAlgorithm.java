@@ -96,9 +96,9 @@ public class StringDistanceAlgorithm {
 
     private static List<WordEdits> addEdits(int[][] matrix, int sourceLength, int targetLength, String source, String target) {
         List<WordEdits> edits = new ArrayList<>();
-        for (int i = targetLength - 1; i > 1; i--) {
+        for (int i = targetLength - 1; i > 2; i--) {
             char targetCharacterAtIndex = target.charAt(i - 1);
-            for (int j = sourceLength - 1; j > 1; j--) {
+            for (int j = sourceLength - 1; j > 2; j--) {
                 char sourceCharacterAtIndex = source.charAt(j- 1);
 
                 if (matrix[i - 1][j - 1] <= matrix[i-1][j] && matrix[i - 1][j - 1] <= matrix[i][j-1]) {
@@ -108,13 +108,12 @@ public class StringDistanceAlgorithm {
                         }
                     }
                 }
-
                 if (matrix[i][j-1] <= matrix[i-1][j]) {
                     if ((matrix[i][j - 1] == matrix[i][j]) || (matrix[i][j] - matrix[i][j - 1] <= 0)) {
                         edits.add(new WordEdits(EditType.INSERTION, j - 1, sourceCharacterAtIndex, targetCharacterAtIndex));
                         j--;
                     } else {
-                        edits.add(new WordEdits(EditType.DELETETION, j - 1, sourceCharacterAtIndex, targetCharacterAtIndex));
+                        edits.add(new WordEdits(EditType.DELETETION, j - 1, sourceCharacterAtIndex));
                         i--;
                     }
                 }

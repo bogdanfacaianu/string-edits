@@ -24,6 +24,12 @@ public class WordEdits {
         this.potentialSolution = potentialSolution;
     }
 
+    public WordEdits(EditType editType, int editIndex, char foundCharacter) {
+        this.editType = editType;
+        this.editIndex = editIndex;
+        this.foundCharacter = foundCharacter;
+    }
+
     public EditType getEditType() {
         return editType;
     }

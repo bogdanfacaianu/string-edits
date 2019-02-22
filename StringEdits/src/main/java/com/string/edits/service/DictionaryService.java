@@ -1,5 +1,6 @@
 package com.string.edits.service;
 
+import com.google.gson.Gson;
 import com.string.edits.domain.Language;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.persistence.repository.LanguageRepository;
@@ -14,11 +15,13 @@ public class DictionaryService {
 
     private final LanguageRepository languageRepository;
     private final DictionaryOperations dictionaryOperations;
+    private final Gson gson;
 
     @Autowired
-    public DictionaryService(LanguageRepository languageRepository, DictionaryOperations dictionaryOperations) {
+    public DictionaryService(LanguageRepository languageRepository, DictionaryOperations dictionaryOperations, Gson gson) {
         this.languageRepository = languageRepository;
         this.dictionaryOperations = dictionaryOperations;
+        this.gson = gson;
     }
 
     public Optional<Language> findLanguageByName(String languageName) {
@@ -44,5 +47,9 @@ public class DictionaryService {
 
     public void removeLanguage(String languageName) {
         languageRepository.delete(languageName);
+    }
+
+    public String convertToJsonOutput(TermQuery termQuery) {
+        return gson.toJson(termQuery);
     }
 }

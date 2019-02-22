@@ -14,6 +14,11 @@ public class DistanceToWord {
         this.distance = 0;
     }
 
+    public DistanceToWord(String word, int distance) {
+        this.word = word;
+        this.distance = distance;
+    }
+
     public String getWord() {
         return word;
     }

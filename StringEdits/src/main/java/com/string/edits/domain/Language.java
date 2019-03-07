@@ -1,19 +1,19 @@
 package com.string.edits.domain;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class Language {
 
     private String name;
-    private Set<String> dictionary = new HashSet<>();
+    private Map<String, String> dictionary = new HashMap<>();
 
     public Language(String name) {
         this.name = name;
     }
 
-    public Language(String name, Set<String> dictionary) {
+    public Language(String name, Map<String, String> dictionary) {
         this.name = name;
         this.dictionary = dictionary;
     }
@@ -26,25 +26,33 @@ public class Language {
         this.name = name;
     }
 
-    public Set<String> getDictionary() {
+    public Map<String, String> getDictionary() {
         return dictionary;
     }
 
-    public void setDictionary(Set<String> dictionary) {
+    public void setDictionary(Map<String, String> dictionary) {
         this.dictionary = dictionary;
     }
 
-    public void addPattern(String pattern) {
-        dictionary.add(pattern);
+    public void addWord(String word, String description) {
+        dictionary.put(word, description);
+    }
+
+    public String removeWord(String word) {
+        return dictionary.remove(word);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Language)) {
+            return false;
+        }
         Language language = (Language) o;
         return Objects.equals(name, language.name) &&
-                Objects.equals(dictionary, language.dictionary);
+            Objects.equals(dictionary, language.dictionary);
     }
 
     @Override

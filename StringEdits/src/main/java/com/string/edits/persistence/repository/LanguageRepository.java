@@ -6,10 +6,12 @@ public interface LanguageRepository {
 
     void save(Language language);
 
-    void addPatternToLanguage(String languageName, String pattern);
+    void addWordToLanguage(String languageName, String word, String description);
 
     void delete(String languageName);
 
     Language findLanguage(String name);
+
+    void removeWordFromLanguage(String languageName, String word);
 
 }

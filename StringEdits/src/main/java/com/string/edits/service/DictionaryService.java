@@ -32,8 +32,8 @@ public class DictionaryService {
         languageRepository.save(language);
     }
 
-    public void addPatternToLanguage(String languageName, String word) {
-        languageRepository.addPatternToLanguage(languageName, word);
+    public void addWordToLanguage(String languageName, String word, String description) {
+        languageRepository.addWordToLanguage(languageName, word, description);
     }
 
     public TermQuery getResultsForWord(String languageName, String word, int maxDistance) {
@@ -51,5 +51,9 @@ public class DictionaryService {
 
     public String convertToJsonOutput(TermQuery termQuery) {
         return gson.toJson(termQuery);
+    }
+
+    public void removeWordFromLanguage(String languageName, String word) {
+        languageRepository.removeWordFromLanguage(languageName, word);
     }
 }

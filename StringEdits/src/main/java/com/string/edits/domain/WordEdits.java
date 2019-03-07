@@ -8,14 +8,8 @@ public class WordEdits {
     private int editIndex;
 
     private char foundCharacter;
-    // applicable for all but deletion
+    // applicable only for substitution or transposition
     private char potentialSolution;
-    // transposition looks fucked up tho
-
-    public WordEdits(EditType editType, int editIndex) {
-        this.editType = editType;
-        this.editIndex = editIndex;
-    }
 
     public WordEdits(EditType editType, int editIndex, char foundCharacter, char potentialSolution) {
         this.editType = editType;

@@ -1,81 +1,42 @@
 package com.string.edits.persistence.algorithm;
 
+import static com.string.edits.domain.EditType.DELETETION;
+import static com.string.edits.domain.EditType.INSERTION;
+import static com.string.edits.domain.EditType.SUBSTITUTION;
+
 import com.string.edits.domain.DistanceToWord;
-import com.string.edits.domain.EditType;
 import com.string.edits.domain.WordEdits;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-/*****************************************************************************************************************
- *   This algorithm's source can be found at:                                                                     *
- *   https://people.cs.pitt.edu/~kirk/cs1501/Pruhs/Spring2006/assignments/editdistance/Levenshtein%20Distance.htm *
- *****************************************************************************************************************/
 
 public class StringDistanceAlgorithm {
 
-    public static DistanceToWord computeDistance(String source, String target) {
-        int matrix[][]; // matrix
-        int sourceLength; // length of source
-        int targetLength; // length of target
-        int sourceIndex; // iterates through source
-        int targetIndex; // iterates through target
-        char sourceCharacterAtIndex; // ith character of s
-        char targetCharacterAtIndex; // jth character of t
-        int cost; // cost
+    public static DistanceToWord computeLevenshteinDistance(CharSequence lhs, CharSequence rhs) {
+        int[][] distance = new int[lhs.length() + 1][rhs.length() + 1];
+        DistanceToWord dtw = new DistanceToWord(rhs.toString());
 
-        DistanceToWord dtw = new DistanceToWord(target);
-
-        // Step 1
-        sourceLength = source.length();
-        targetLength = target.length();
-        if (sourceLength == 0) {
-            dtw.setDistance(targetLength);
-            return dtw;
+        for (int i = 0; i <= lhs.length(); i++) {
+            distance[i][0] = i;
         }
-        if (targetLength == 0) {
-            dtw.setDistance(sourceLength);
-            return dtw;
-        }
-        matrix = new int[sourceLength + 1][targetLength + 1];
-
-        // Step 2
-        for (sourceIndex = 0; sourceIndex <= sourceLength; sourceIndex++) {
-            matrix[sourceIndex][0] = sourceIndex;
-        }
-        for (targetIndex = 0; targetIndex <= targetLength; targetIndex++) {
-            matrix[0][targetIndex] = targetIndex;
+        for (int j = 1; j <= rhs.length(); j++) {
+            distance[0][j] = j;
         }
 
-        // Step 3
-        for (sourceIndex = 1; sourceIndex <= sourceLength; sourceIndex++) {
-            sourceCharacterAtIndex = source.charAt(sourceIndex - 1);
-
-            // Step 4
-            for (targetIndex = 1; targetIndex <= targetLength; targetIndex++) {
-                targetCharacterAtIndex = target.charAt(targetIndex - 1);
-
-                // Step 5
-                if (sourceCharacterAtIndex == targetCharacterAtIndex) {
-                    cost = 0;
-                } else {
-                    cost = 1;
-                }
-
-                // Step 6
-                matrix[sourceIndex][targetIndex] = minimum(
-                    matrix[sourceIndex - 1][targetIndex] + 1,
-                    matrix[sourceIndex][targetIndex - 1] + 1,
-                    matrix[sourceIndex - 1][targetIndex - 1] + cost);
+        for (int i = 1; i <= lhs.length(); i++) {
+            for (int j = 1; j <= rhs.length(); j++) {
+                distance[i][j] = minimum(
+                    distance[i - 1][j] + 1,
+                    distance[i][j - 1] + 1,
+                    distance[i - 1][j - 1] + ((lhs.charAt(i - 1) == rhs.charAt(j - 1)) ? 0 : 1));
             }
-
         }
-//        printMatrix(matrix, sourceLength, targetLength);
+        printMatrix(distance, lhs.length(), rhs.length(), lhs.toString(), rhs.toString());
 
-        dtw.setDistance(matrix[sourceLength][targetLength]);
-        List<WordEdits> wordEdits = addEdits(matrix, sourceLength, targetLength, source, target);
+        dtw.setDistance(distance[lhs.length()][rhs.length()]);
+        List<WordEdits> wordEdits = addEdits(distance, lhs.length(), rhs.length(), lhs.toString(), rhs.toString());
         dtw.setEdits(wordEdits);
-
-        // Step 7
+        System.out.println(dtw);
         return dtw;
     }
 
@@ -83,50 +44,73 @@ public class StringDistanceAlgorithm {
         return Math.min(Math.min(deletionCost, insertionCost), substitutionCost);
     }
 
-    private static void printMatrix(int matrix[][], int sourceLength, int targetLength) {
-        for (int i = 0; i < targetLength; i++) {
-            for (int j = 0; j < sourceLength; j++) {
+    private static void printMatrix(int matrix[][], int sourceLength, int targetLength, String source, String target) {
+        System.out.print(" ");
+        for (int j = 0; j < targetLength; j++) {
+            System.out.print(" " + target.charAt(j));
+        }
+        System.out.println();
+        for (int i = 0; i < sourceLength; i++) {
+            System.out.print("" + source.charAt(i) + " ");
+            for (int j = 0; j < targetLength; j++) {
                 System.out.print("" + matrix[i][j] + " ");
             }
             System.out.println();
         }
     }
 
-
-    private static List<WordEdits> addEdits(int[][] matrix, int sourceLength, int targetLength, String source, String target) {
+    private static List<WordEdits> addEdits(int[][] distance, int sourceLength, int targetLength, String source, String target) {
         List<WordEdits> edits = new ArrayList<>();
 
-//        damn you ...
-        int i = sourceLength - 1, j = targetLength - 1;
-        while (!(i == 1 && j == 1)) {
-//        for (int i = sourceLength - 1; i > 2; i--) {
-            char sourceCharacterAtIndex = source.charAt(i - 1);
-//            for (int j = targetLength - 1; j > 2; j--) {
-            char targetCharacterAtIndex = target.charAt(j - 1);
+        int i = sourceLength;
+        int j = targetLength;
 
-            if (matrix[i - 1][j - 1] <= matrix[i - 1][j] || matrix[i - 1][j - 1] <= matrix[i][j - 1]) {
-                if ((matrix[i][j] - matrix[i - 1][j - 1] == 1) || (matrix[i - 1][j - 1] == matrix[i][j])) {
-                    if (matrix[i][j] - matrix[i - 1][j - 1] == 1) {
-                        edits.add(new WordEdits(EditType.SUBSTITUTION, i, sourceCharacterAtIndex, targetCharacterAtIndex));
-                        i--;j--;
-                    }
+        while (i != 0 || j != 0) {
+            char sourceCharacterAtIndex = (i > 0) ? source.charAt(i - 1) : Character.MIN_VALUE;
+            char targetCharacterAtIndex = (j > 0) ? target.charAt(j - 1) : Character.MIN_VALUE;
+
+            if (j <= 0) {
+                while (i > 0) {
+                    edits.add(new WordEdits(DELETETION, j, sourceCharacterAtIndex));
+                    i--;
+                    sourceCharacterAtIndex = (i > 0) ? source.charAt(i - 1) : Character.MIN_VALUE;
                 }
+                break;
             }
-            if (matrix[i][j - 1] <= matrix[i - 1][j]) {
-                if ((matrix[i][j - 1] == matrix[i][j]) || (matrix[i][j] - matrix[i][j - 1] == 1)) {
-                    edits.add(new WordEdits(EditType.INSERTION, j - 1, sourceCharacterAtIndex, targetCharacterAtIndex));
-                        j--;
-                } else {
-                    edits.add(new WordEdits(EditType.DELETETION, j - 1, sourceCharacterAtIndex));
-                        i--;
+
+            if (i <= 0) {
+                while (j > 0) {
+                    edits.add(new WordEdits(INSERTION, i, targetCharacterAtIndex));
+                    j--;
+                    targetCharacterAtIndex = (j > 0) ? target.charAt(j - 1) : Character.MIN_VALUE;
                 }
+                break;
+            }
+
+            int currentCell = distance[i][j];
+            int diagonalCell = distance[i - 1][j - 1];
+            int leftCell = distance[i][j - 1];
+            int aboveCell = distance[i - 1][j];
+
+            int smallestOfAll3 = minimum(diagonalCell, leftCell, aboveCell);
+
+            if (diagonalCell == smallestOfAll3 && (diagonalCell == currentCell - 1 || diagonalCell == currentCell)) {
+                if (diagonalCell == currentCell - 1) {
+                    edits.add(new WordEdits(SUBSTITUTION, i, sourceCharacterAtIndex, targetCharacterAtIndex));
+                }
+
+                i--;
+                j--;
+            } else if (leftCell <= diagonalCell && leftCell == currentCell - 1) {
+                edits.add(new WordEdits(INSERTION, i, targetCharacterAtIndex));
+                j--;
+            } else {
+                edits.add(new WordEdits(DELETETION, i, sourceCharacterAtIndex));
+                i--;
             }
         }
 
+        Collections.reverse(edits);
         return edits;
-    }
-
-    public static void main(String[] args) {
-        System.out.println("\n" + computeDistance("computer", "cmputer"));
     }
 }

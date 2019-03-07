@@ -60,7 +60,7 @@ public class DictionaryOperations {
         List<DistanceToWord> withEdits = new ArrayList<>();
         if (termQuery.getMatches().get(0).getDistance() > 0) {
             for (DistanceToWord dtw : termQuery.getMatches()) {
-                withEdits.add(StringDistanceAlgorithm.computeDistance(searchTerm, dtw.getWord()));
+                withEdits.add(StringDistanceAlgorithm.computeLevenshteinDistance(searchTerm, dtw.getWord()));
             }
             termQuery.setMatches(withEdits);
         }

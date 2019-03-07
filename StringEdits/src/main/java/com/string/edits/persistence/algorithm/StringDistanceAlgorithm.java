@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*****************************************************************************************************************
-*   This algorithm's source can be found at:                                                                     *
-*   https://people.cs.pitt.edu/~kirk/cs1501/Pruhs/Spring2006/assignments/editdistance/Levenshtein%20Distance.htm *
-*****************************************************************************************************************/
+ *   This algorithm's source can be found at:                                                                     *
+ *   https://people.cs.pitt.edu/~kirk/cs1501/Pruhs/Spring2006/assignments/editdistance/Levenshtein%20Distance.htm *
+ *****************************************************************************************************************/
 
 public class StringDistanceAlgorithm {
 
@@ -36,7 +36,7 @@ public class StringDistanceAlgorithm {
             dtw.setDistance(sourceLength);
             return dtw;
         }
-        matrix = new int[sourceLength+1][targetLength+1];
+        matrix = new int[sourceLength + 1][targetLength + 1];
 
         // Step 2
         for (sourceIndex = 0; sourceIndex <= sourceLength; sourceIndex++) {
@@ -57,16 +57,15 @@ public class StringDistanceAlgorithm {
                 // Step 5
                 if (sourceCharacterAtIndex == targetCharacterAtIndex) {
                     cost = 0;
-                }
-                else {
+                } else {
                     cost = 1;
                 }
 
                 // Step 6
                 matrix[sourceIndex][targetIndex] = minimum(
-                        matrix[sourceIndex-1][targetIndex] + 1,
-                        matrix[sourceIndex][targetIndex-1] + 1,
-                        matrix[sourceIndex-1][targetIndex-1] + cost);
+                    matrix[sourceIndex - 1][targetIndex] + 1,
+                    matrix[sourceIndex][targetIndex - 1] + 1,
+                    matrix[sourceIndex - 1][targetIndex - 1] + cost);
             }
 
         }
@@ -81,7 +80,7 @@ public class StringDistanceAlgorithm {
     }
 
     private static int minimum(int deletionCost, int insertionCost, int substitutionCost) {
-        return Math.min(Math.min(deletionCost,insertionCost), substitutionCost);
+        return Math.min(Math.min(deletionCost, insertionCost), substitutionCost);
     }
 
     private static void printMatrix(int matrix[][], int sourceLength, int targetLength) {
@@ -97,26 +96,29 @@ public class StringDistanceAlgorithm {
     private static List<WordEdits> addEdits(int[][] matrix, int sourceLength, int targetLength, String source, String target) {
         List<WordEdits> edits = new ArrayList<>();
 
-        for (int i = sourceLength - 1; i > 2; i--) {
+//        damn you ...
+        int i = sourceLength - 1, j = targetLength - 1;
+        while (!(i == 1 && j == 1)) {
+//        for (int i = sourceLength - 1; i > 2; i--) {
             char sourceCharacterAtIndex = source.charAt(i - 1);
-            for (int j = targetLength - 1; j > 2; j--) {
-                char targetCharacterAtIndex = target.charAt(j - 1);
+//            for (int j = targetLength - 1; j > 2; j--) {
+            char targetCharacterAtIndex = target.charAt(j - 1);
 
-                if (matrix[i - 1][j - 1] <= matrix[i - 1][j] || matrix[i - 1][j - 1] <= matrix[i][j - 1]) {
-                    if ((matrix[i][j] - matrix[i - 1][j - 1] == 1) || (matrix[i - 1][j - 1] == matrix[i][j])) {
-                        if (matrix[i][j] - matrix[i - 1][j - 1] == 1) {
-                            edits.add(new WordEdits(EditType.SUBSTITUTION, i, sourceCharacterAtIndex, targetCharacterAtIndex));
-                        }
+            if (matrix[i - 1][j - 1] <= matrix[i - 1][j] || matrix[i - 1][j - 1] <= matrix[i][j - 1]) {
+                if ((matrix[i][j] - matrix[i - 1][j - 1] == 1) || (matrix[i - 1][j - 1] == matrix[i][j])) {
+                    if (matrix[i][j] - matrix[i - 1][j - 1] == 1) {
+                        edits.add(new WordEdits(EditType.SUBSTITUTION, i, sourceCharacterAtIndex, targetCharacterAtIndex));
+                        i--;j--;
                     }
                 }
-                if (matrix[i][j - 1] <= matrix[i - 1][j]) {
-                    if ((matrix[i][j - 1] == matrix[i][j]) || (matrix[i][j] - matrix[i][j - 1] == 1)) {
-                        edits.add(new WordEdits(EditType.INSERTION, j - 1, sourceCharacterAtIndex, targetCharacterAtIndex));
-                        j++;
-                    } else {
-                        edits.add(new WordEdits(EditType.DELETETION, j - 1, sourceCharacterAtIndex));
-                        i++;
-                    }
+            }
+            if (matrix[i][j - 1] <= matrix[i - 1][j]) {
+                if ((matrix[i][j - 1] == matrix[i][j]) || (matrix[i][j] - matrix[i][j - 1] == 1)) {
+                    edits.add(new WordEdits(EditType.INSERTION, j - 1, sourceCharacterAtIndex, targetCharacterAtIndex));
+                        j--;
+                } else {
+                    edits.add(new WordEdits(EditType.DELETETION, j - 1, sourceCharacterAtIndex));
+                        i--;
                 }
             }
         }

@@ -58,9 +58,11 @@ public class DictionaryOperations {
 
     private void setEditsToMatches(TermQuery termQuery, String searchTerm) {
         List<DistanceToWord> withEdits = new ArrayList<>();
-        for (DistanceToWord dtw : termQuery.getMatches()) {
-            withEdits.add(StringDistanceAlgorithm.computeDistance(searchTerm, dtw.getWord()));
+        if (termQuery.getMatches().get(0).getDistance() > 0) {
+            for (DistanceToWord dtw : termQuery.getMatches()) {
+                withEdits.add(StringDistanceAlgorithm.computeDistance(searchTerm, dtw.getWord()));
+            }
+            termQuery.setMatches(withEdits);
         }
-        termQuery.setMatches(withEdits);
     }
 }

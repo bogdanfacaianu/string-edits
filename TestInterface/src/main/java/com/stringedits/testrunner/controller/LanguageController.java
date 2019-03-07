@@ -6,6 +6,7 @@ import com.string.edits.service.DictionaryService;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -43,7 +44,9 @@ public class LanguageController {
     }
 
     @RequestMapping(value = "/getMatches/{languageName}/{word}/withMaxDistance/{maxDistance}", produces = "application/json")
-    public String getMatchesWithMaxDistance(@PathVariable("languageName") String languageName, @PathVariable("word") String word, @PathVariable("maxDistance") int maxDistance) {
+    public String getMatchesWithMaxDistance(@PathVariable("languageName") String languageName,
+        @PathVariable("word") String word,
+        @PathVariable("maxDistance") int maxDistance) {
         TermQuery resultsForWord = dictionaryService.getResultsForWord(languageName, word, maxDistance);
         return dictionaryService.convertToJsonOutput(resultsForWord);
     }
@@ -51,15 +54,13 @@ public class LanguageController {
     @RequestMapping("/listLanguage/{languageName}")
     public Language getLanguage(@PathVariable("languageName") String languageName) {
         Optional<Language> languageOptional = dictionaryService.findLanguageByName(languageName);
-        if (languageOptional.isPresent()) {
-            return languageOptional.get();
-        }
-        return new Language(null);
+        return languageOptional.orElseGet(() -> new Language(null));
     }
 
     @RequestMapping("/loadEnglishWords")
     public Language loadEnglishWordsFromFile() throws FileNotFoundException {
-        String path = getClass().getClassLoader().getResource("dictionary/words.txt").getPath();
+        String path = Objects.requireNonNull(
+            getClass().getClassLoader().getResource("dictionary/words.txt")).getPath();
         Scanner file = new Scanner(new File(path));
 
         Set<String> words = new HashSet<>();

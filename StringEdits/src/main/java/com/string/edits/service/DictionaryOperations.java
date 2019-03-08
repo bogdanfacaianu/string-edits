@@ -15,10 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DictionaryOperations {
 
-    public int getDistanceBetween(String source, String target) {
-        return StringDistanceAlgorithm.computeDistance(source, target);
-    }
-
     public TermQuery getSolutions(Language language, String searchTerm, int maxDistance) {
         if (maxDistance < 1) {
             maxDistance = 5;
@@ -54,6 +50,19 @@ public class DictionaryOperations {
                 .collect(Collectors.toList());
             termQuery.setMatches(filteredResults);
         }
+
+        setEditsToMatches(termQuery, searchTerm);
+
         return termQuery;
+    }
+
+    private void setEditsToMatches(TermQuery termQuery, String searchTerm) {
+        List<DistanceToWord> withEdits = new ArrayList<>();
+        if (termQuery.getMatches().get(0).getDistance() > 0) {
+            for (DistanceToWord dtw : termQuery.getMatches()) {
+                withEdits.add(StringDistanceAlgorithm.computeLevenshteinDistance(searchTerm, dtw.getWord()));
+            }
+            termQuery.setMatches(withEdits);
+        }
     }
 }

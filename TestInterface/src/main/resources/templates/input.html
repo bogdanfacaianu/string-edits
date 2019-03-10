@@ -8,24 +8,50 @@
 <body>
 <div class="container">
 
-  <form method="POST" commandName="sendTextForAnalysis">
-    <table>
-      <tr>
-        <td><p>Input Your Text</p></td>
-      </tr>
-      <tr>
-        <td>
-          <textarea th:field="*{textareaField}"></textarea></td>
-        <td colspan="3">
-          <input type="submit" />
-        </td>
-      </tr>
-    </table>
-  </form>
+  <!--<form method="POST" commandName="sendTextForAnalysis">-->
+  <!--<table>-->
+  <!--<tr>-->
+  <!--<td><p>Input Your Text</p></td>-->
+  <!--</tr>-->
+  <!--<tr>-->
+  <!--<td>-->
+  <!--<textarea th:field="*{textareaField}"></textarea></td>-->
+  <!--<td colspan="3">-->
+  <!--<input type="submit" />-->
+  <!--</td>-->
+  <!--</tr>-->
+  <!--</table>-->
+  <!--</form>-->
 
-  <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-  <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <script src="static/js/textview.js"></script>
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li class="active">
+          <a href="#">Home</a>
+        </li>
+        <li>
+          <a href="#">Individual</a>
+        </li>
+        <li>
+          <a href="#">Bulk Analysis</a>
+        </li>
+      </ul>
+    </div><!--/.container-fluid -->
+  </nav>
+
+  <div class="jumbotron">
+    <h3 th:text="'Welcome to basic Bootstrap with Spring Boot created by ' + ${username}"></h3>
+    <p th:text="'This date example  ' + ${#dates.format(datetime, 'dd MMM yyyy HH:mm')}"></p>
+    <p> is a quick exercise to illustrate how the default, static navbar and fixed to top navbar work.
+      It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
+    <p>
+      <a class="btn btn-lg btn-primary" href="#" role="button">View navbar docs &raquo;</a>
+    </p>
+  </div>
 </div>
 </body>
+<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="static/js/textview.js"></script>
 </html>

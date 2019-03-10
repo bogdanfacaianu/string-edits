@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,8 +25,17 @@ public class TestController {
 
     @RequestMapping("/loadEnglishWords")
     public Language loadEnglishWordsFromFile() throws FileNotFoundException {
+        return createLanguage("english");
+    }
+
+    @RequestMapping("/load/{name}/dictionary")
+    public Language loadEnglishWordsFromFile(@PathVariable String name) throws FileNotFoundException {
+        return createLanguage(name);
+    }
+
+    private Language createLanguage(String name) throws FileNotFoundException {
         String path = Objects.requireNonNull(
-            getClass().getClassLoader().getResource("dictionary/words.txt")).getPath();
+            getClass().getClassLoader().getResource("dictionary/" + name + ".txt")).getPath();
         Scanner file = new Scanner(new File(path));
 
         Map<String, String> words = new HashMap<>();
@@ -33,7 +43,7 @@ public class TestController {
             words.put(file.next().toLowerCase(), null);
         }
 
-        Language language = new Language("english", words);
+        Language language = new Language(name, words);
         dictionaryService.saveLanguage(language);
         return language;
     }

@@ -1,10 +1,10 @@
-package com.stringedits.testrunner.controller;
+package com.stringedits.testrunner.controller.rest;
 
 import com.string.edits.domain.TermQuery;
 import com.string.edits.service.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,7 +17,7 @@ public class DictionaryController {
         this.dictionaryService = dictionaryService;
     }
 
-    @RequestMapping(value = "/getMatches/{languageName}/{word}", produces = "application/json")
+    @PostMapping(value = "/getMatches/{languageName}/{word}", produces = "application/json")
     public String getMatches(
         @PathVariable("languageName") String languageName,
         @PathVariable("word") String word) {
@@ -26,7 +26,7 @@ public class DictionaryController {
         return dictionaryService.convertToJsonOutput(resultsForWord);
     }
 
-    @RequestMapping(value = "/getMatches/{languageName}/{word}/withMaxDistance/{maxDistance}", produces = "application/json")
+    @PostMapping(value = "/getMatches/{languageName}/{word}/withMaxDistance/{maxDistance}", produces = "application/json")
     public String getMatchesWithMaxDistance(
         @PathVariable("languageName") String languageName,
         @PathVariable("word") String word,

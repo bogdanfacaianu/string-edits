@@ -3,7 +3,6 @@ package com.string.edits.repository;
 import com.google.gson.Gson;
 import com.string.edits.couchbase.entities.CouchbaseClient;
 import com.string.edits.domain.Language;
-import com.string.edits.persistence.algorithm.StringDistanceAlgorithm;
 import com.string.edits.persistence.repository.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,9 +25,9 @@ public class DefaultLanguageRepository implements LanguageRepository {
     }
 
     @Override
-    public void addWordToLanguage(String languageName, String word, String description) {
+    public void addWordToLanguage(String languageName, String word) {
         Language language = findLanguage(languageName);
-        language.addWord(word, description);
+        language.addWord(word);
         save(language);
     }
 

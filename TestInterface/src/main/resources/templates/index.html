@@ -1,42 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/layout">
 <head>
-  <title>Welcome</title>
-  <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-  <link href="static/css/textview.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <link th:href="@{/css/textview.css}" rel="stylesheet"/>
 </head>
+
 <body>
-<div class="container">
+<div th:replace="navbar :: navbar"></div>
 
-  <!-- Static navbar -->
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <ul class="nav navbar-nav">
-        <li class="active">
-          <a href="#">Home</a>
-        </li>
-        <li>
-          <a href="#">Individual</a>
-        </li>
-        <li>
-          <a href="#">Bulk Analysis</a>
-        </li>
-      </ul>
-    </div><!--/.container-fluid -->
-  </nav>
+<div class="container-fluid">
 
-  <div class="jumbotron">
-    <h3 th:text="'Welcome to basic Bootstrap with Spring Boot created by ' + ${username}"></h3>
-    <p th:text="'This date example  ' + ${#dates.format(datetime, 'dd MMM yyyy HH:mm')}"></p>
-    <p> is a quick exercise to illustrate how the default, static navbar and fixed to top navbar work.
-      It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-    <p>
-      <a class="btn btn-lg btn-primary" href="#" role="button">View navbar docs &raquo;</a>
-    </p>
+  <div layout:fragment="content">
+
+    <div class="container">
+
+      <div class="panel-body">
+
+        <div class="jumbotron">
+          <h2 th:text="'Welcome to a basic String Edits Test Application'"></h2>
+          <p></p>
+          <p> First let us add some data to test against
+            <a class="btn btn-lg btn-primary" th:href="@{/load}" role="button">Load Data &raquo;</a>
+          </p>
+          <p> Test an individual word
+            <a class="btn btn-lg btn-primary" th:href="@{/input}" role="button">Test Simple Word Match &raquo;</a>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
   </div>
+
 </div>
 </body>
-<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/jquery/2.1.4/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="static/js/textview.js"></script>
 </html>

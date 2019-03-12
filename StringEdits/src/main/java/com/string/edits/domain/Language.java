@@ -1,19 +1,19 @@
 package com.string.edits.domain;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Language {
 
     private String name;
-    private Map<String, String> dictionary = new HashMap<>();
+    private Set<String> dictionary = new HashSet<>();
 
     public Language(String name) {
         this.name = name;
     }
 
-    public Language(String name, Map<String, String> dictionary) {
+    public Language(String name, Set<String> dictionary) {
         this.name = name;
         this.dictionary = dictionary;
     }
@@ -26,19 +26,19 @@ public class Language {
         this.name = name;
     }
 
-    public Map<String, String> getDictionary() {
+    public Set<String> getDictionary() {
         return dictionary;
     }
 
-    public void setDictionary(Map<String, String> dictionary) {
+    public void setDictionary(Set<String> dictionary) {
         this.dictionary = dictionary;
     }
 
-    public void addWord(String word, String description) {
-        dictionary.put(word, description);
+    public void addWord(String word) {
+        dictionary.add(word);
     }
 
-    public String removeWord(String word) {
+    public boolean removeWord(String word) {
         return dictionary.remove(word);
     }
 

@@ -1,4 +1,4 @@
-package com.stringedits.testrunner.controller;
+package com.stringedits.testrunner.controller.view;
 
 import com.string.edits.service.DictionaryService;
 import java.util.Date;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@RequestMapping("/")
 public class ViewController {
 
     private final DictionaryService dictionaryService;
@@ -20,26 +21,20 @@ public class ViewController {
         this.dictionaryService = dictionaryService;
     }
 
-    @RequestMapping("/welcome")
-    public String loginMessage(){
-        return "welcome";
-    }
-
-
-    @RequestMapping("/index")
+    @GetMapping
     public String index(Model model){
         model.addAttribute("datetime", new Date());
-        model.addAttribute("username", "Ömerrrr");
+        model.addAttribute("username", "bob");
         model.addAttribute("mode", "dev");
 
         return "index";
     }
 
-    @RequestMapping("/input")
-    public String inputView(Model model) {
-        model.addAttribute("datetime", new Date());
-        model.addAttribute("username", "bob");
-        model.addAttribute("mode", "dev");
+    @GetMapping("/input")
+    public String inputView() {
+//        model.addAttribute("datetime", new Date());
+//        model.addAttribute("username", "gigel");
+//        model.addAttribute("mode", "dev");
         return "input";
     }
 

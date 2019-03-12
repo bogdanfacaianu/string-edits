@@ -6,7 +6,7 @@ public interface LanguageRepository {
 
     void save(Language language);
 
-    void addWordToLanguage(String languageName, String word, String description);
+    void addWordToLanguage(String languageName, String word);
 
     void delete(String languageName);
 

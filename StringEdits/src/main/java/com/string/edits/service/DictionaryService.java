@@ -32,8 +32,8 @@ public class DictionaryService {
         languageRepository.save(language);
     }
 
-    public void addWordToLanguage(String languageName, String word, String description) {
-        languageRepository.addWordToLanguage(languageName, word, description);
+    public void addWordToLanguage(String languageName, String word) {
+        languageRepository.addWordToLanguage(languageName, word);
     }
 
     public TermQuery getResultsForWord(String languageName, String word, int maxDistance) {

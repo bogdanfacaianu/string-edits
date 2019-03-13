@@ -32,10 +32,13 @@ public class ViewController {
 
     @GetMapping("/input")
     public String inputView() {
-//        model.addAttribute("datetime", new Date());
-//        model.addAttribute("username", "gigel");
-//        model.addAttribute("mode", "dev");
         return "input";
+    }
+
+
+    @GetMapping("/output")
+    public String outputView() {
+        return "output";
     }
 
     @PostMapping("/processTextAnalysis")

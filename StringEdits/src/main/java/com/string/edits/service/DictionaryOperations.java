@@ -58,7 +58,7 @@ public class DictionaryOperations {
 
     private void setEditsToMatches(TermQuery termQuery, String searchTerm) {
         List<DistanceToWord> withEdits = new ArrayList<>();
-        if (termQuery.getMatches().get(0).getDistance() > 0) {
+        if (!termQuery.getMatches().isEmpty() && termQuery.getMatches().get(0).getDistance() > 0) {
             for (DistanceToWord dtw : termQuery.getMatches()) {
                 withEdits.add(StringDistanceAlgorithm.computeLevenshteinDistance(searchTerm, dtw.getWord()));
             }

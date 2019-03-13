@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/layout">
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <link th:href="@{/css/textview.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<div th:replace="navbar :: navbar"></div>
+
+<div class="container-fluid">
+
+  <div layout:fragment="content">
+
+    <div class="container">
+
+      <div class="panel-body">
+        <div class="jumbotron">
+          <div class="container">
+
+            <h4 th:text="'Language Results for term: ' + ${term}"></h4><br>
+
+            <div class="container" style="float: left">
+              <div th:each="dtw : ${distancesToWord}">
+                <div th:text="'Word Matching in ' + ${language} + ' is ' + ${dtw.word}"></div>
+
+                <div class="container" th:if="${dtw.distance > 0}" th:each="edits : ${dtw.edits}">
+                  <div style="float: left">
+                    <span th:text="${edits.editType}"></span></td>
+                  </div>
+                  <div style="float: right;">
+                    <br><span th:text="'At search term index: ' + ${edits.editIndex}"/>
+                    <br><span th:text="'Found character: ' + ${edits.foundCharacter}"/>
+                    <br><span th:if="${edits.potentialSolution}" th:text="'Potential solution: ' + ${edits.potentialSolution}"/>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</body>
+<script src="webjars/jquery/2.1.4/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</html>

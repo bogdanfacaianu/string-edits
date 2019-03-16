@@ -22,19 +22,19 @@
         <div class="jumbotron">
           <div class="container">
 
-            <h3>Language Word Manipulation</h3><br>
+            <h3>Input word for analysis in language desired</h3><br>
             <div class="container">
               <div style="float: left">
                 <form id="single-word-matches-form" th:action="@{/input/getMatches}" method="post">
                   <table>
                     <tr>
-                      <td><label>Language</label></td>
-                      <td><input type='text' name='languageName'/></td>
-                      <td rowspan="2"><input type="submit" value="Load" class="btn"></td>
+                      <td th:cellpadding="30px"><label>Language</label></td>
+                      <td th:cellpadding="30px"><input type='text' name='languageName'/></td>
+                      <td th:cellpadding="30px"rowspan="2"><input type="submit" value="Load" class="btn"></td>
                     </tr>
                     <tr>
-                      <td><label>Word</label></td>
-                      <td><input type='text' name='word'/></td>
+                      <td th:cellpadding="30px"><label>Word</label></td>
+                      <td th:cellpadding="30px"><input type='text' name='word'/></td>
                     </tr>
                   </table>
                 </form>
@@ -42,7 +42,7 @@
 
               <div style="float: right">
                 <form action="#" th:action="@{/getMatches/english/cmputer(maxDistance='5')}" method="get" target="_blank">
-                  <button type="submit" class="btn btn-primary">View JSON Results</button>
+                  <button th:disabled="true" type="submit" class="btn btn-primary">View JSON Results</button>
                 </form>
               </div>
             </div>
@@ -58,5 +58,4 @@
 </body>
 <script src="webjars/jquery/2.1.4/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="/js/input.js"></script>
 </html>

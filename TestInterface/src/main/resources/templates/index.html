@@ -15,27 +15,25 @@
 <div class="container-fluid">
 
   <div layout:fragment="content">
-
     <div class="container">
 
-      <div class="panel-body">
-
-        <div class="jumbotron">
-          <h2 th:text="'Welcome to a basic String Edits Test Application'"></h2>
-          <p></p>
-          <p> First let us add some data to test against
-            <a class="btn btn-lg btn-primary" th:href="@{/load}" role="button">Load Data &raquo;</a>
-          </p>
-          <p> Test an individual word
-            <a class="btn btn-lg btn-primary" th:href="@{/input}" role="button">Test Simple Word Match &raquo;</a>
-          </p>
-        </div>
-
+      <div class="jumbotron">
+        <h2 th:text="'Welcome to a basic String Edits Test Application'"></h2>
+        <hr>
+        <table>
+          <tr>
+            <td>First let us add some data to test against</td>
+            <td style="padding-left: 50px; padding-top: 30px"><a class="btn btn btn-primary" th:href="@{/load}" role="button">Load Data &raquo;</a></td>
+          </tr>
+          <tr>
+            <td>Test an individual word &raquo;</td>
+            <td style="padding-left: 50px; padding-top: 30px"><a class="btn btn btn-primary" th:href="@{/input}" role="button">Test Simple Word Match &raquo;</a></td>
+          </tr>
+        </table>
       </div>
 
     </div>
   </div>
-
 </div>
 </body>
 <script src="webjars/jquery/2.1.4/jquery.min.js"></script>

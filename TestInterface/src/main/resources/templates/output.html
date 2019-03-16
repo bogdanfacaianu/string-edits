@@ -6,7 +6,36 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-  <link th:href="@{/css/textview.css}" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: rgba(141, 159, 154, 0.51);
+      padding-top: 60px;
+    }
+
+    .collapsible {
+      background-color: #777;
+      color: white;
+      cursor: pointer;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      text-align: center;
+      outline: none;
+      font-size: 20px;
+    }
+
+    .active, .collapsible:hover {
+      background-color: #555;
+    }
+
+    .content {
+      padding: 0 18px;
+      display: none;
+      overflow: hidden;
+      width: 100%;
+      background-color: #FFFFFF;
+    }
+  </style>
 </head>
 
 <body>
@@ -20,25 +49,54 @@
 
       <div class="panel-body">
         <div class="jumbotron">
-          <div class="container">
+          <div class="container" style="text-align: center">
 
-            <h4 th:text="'Language Results for term: ' + ${term}"></h4><br>
+            <table width="100%">
+              <tr>
+                <td style="width: 80%;">
+                  <span style="font-size: 25px;">Language Results for term: </span><b>
+                  <span style="font-size: 25px; color: dodgerblue;" th:text="${term}"></span></b></td>
+                <td style="width: 20%;">
+                  <form action="#" th:action="@{'/getMatches/' + ${language} + '/' + ${term}}" method="get" target="_blank">
+                    <button type="submit" class="btn btn-primary">JSON</button>
+                  </form>
+                </td>
+              </tr>
+            </table>
 
-            <div class="container" style="float: left">
+            <br>
+
+            <div class="container">
               <div th:each="dtw : ${distancesToWord}">
-                <div th:text="'Word Matching in ' + ${language} + ' is ' + ${dtw.word}"></div>
-
-                <div class="container" th:if="${dtw.distance > 0}" th:each="edits : ${dtw.edits}">
-                  <div style="float: left">
-                    <span th:text="${edits.editType}"></span></td>
-                  </div>
-                  <div style="float: right;">
-                    <br><span th:text="'At search term index: ' + ${edits.editIndex}"/>
-                    <br><span th:text="'Found character: ' + ${edits.foundCharacter}"/>
-                    <br><span th:if="${edits.potentialSolution}" th:text="'Potential solution: ' + ${edits.potentialSolution}"/>
+                <div th:if="${dtw.distance == 0}">
+                  <button class="collapsible" th:text="'Word Matching in ' + ${language}"></button>
+                </div>
+                <div th:if="${dtw.distance > 0}">
+                  <button class="collapsible" th:text="'Word Matching in ' + ${language} + ' is ' + ${dtw.word}"></button>
+                  <div class="content" th:if="${dtw.distance > 0}">
+                    <div th:each="edits : ${dtw.edits}">
+                      <table align="center" width="100%">
+                        <tr>
+                          <h3><span th:text="${edits.editType}"></span></h3>
+                        </tr>
+                        <tr>
+                          <td style="padding-left: 5%; padding-right: 5%">At search term index:
+                            <b><span style="color: royalblue;" th:text="${edits.editIndex}"></span></b>
+                          </td>
+                          <td style="padding-left: 5%; padding-right: 5%">Found character:
+                            <b><span style="color: red;" th:text="${edits.foundCharacter}"></span></b>
+                          </td>
+                          <td th:if="${edits.potentialSolution}" style="padding-left: 5%; padding-right: 5%">Potential solution: <b>
+                            <span style="color: red;" th:text="${edits.potentialSolution}"></span></b>
+                          </td>
+                        </tr>
+                      </table>
+                      <hr>
+                    </div>
+                    <br>
                   </div>
                 </div>
-
+                <br>
               </div>
             </div>
 
@@ -54,4 +112,5 @@
 </body>
 <script src="webjars/jquery/2.1.4/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="js/output.js"></script>
 </html>

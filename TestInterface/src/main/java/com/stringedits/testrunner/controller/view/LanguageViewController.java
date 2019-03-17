@@ -26,11 +26,6 @@ public class LanguageViewController {
         this.dictionaryService = dictionaryService;
     }
 
-    @GetMapping()
-    public String load() {
-        return "load";
-    }
-
     @PostMapping("/loadEnglishWords")
     public String loadEnglishWordsFromFile() throws FileNotFoundException {
         return loadLanguage("english");

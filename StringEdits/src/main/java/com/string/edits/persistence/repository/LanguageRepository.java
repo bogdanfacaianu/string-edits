@@ -1,6 +1,7 @@
 package com.string.edits.persistence.repository;
 
 import com.string.edits.domain.Language;
+import java.util.List;
 
 public interface LanguageRepository {
 
@@ -13,5 +14,7 @@ public interface LanguageRepository {
     Language findLanguage(String name);
 
     void removeWordFromLanguage(String languageName, String word);
+
+    List<String> findAllLanguages();
 
 }

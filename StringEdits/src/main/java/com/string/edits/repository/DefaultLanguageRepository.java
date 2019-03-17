@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.string.edits.couchbase.entities.CouchbaseClient;
 import com.string.edits.domain.Language;
 import com.string.edits.persistence.repository.LanguageRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -46,5 +47,9 @@ public class DefaultLanguageRepository implements LanguageRepository {
         Language language = findLanguage(languageName);
         language.removeWord(word);
         save(language);
+    }
+
+    public List<String> findAllLanguages() {
+        return couchbaseClient.getField("name");
     }
 }

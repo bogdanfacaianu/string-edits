@@ -53,4 +53,10 @@ public class LanguageController {
         dictionaryService.removeLanguage(languageName);
         return "Removed: " + languageName;
     }
+
+    @RequestMapping("/clearCache")
+    public String clearCache() {
+        dictionaryService.clearCache();
+        return "Cache Cleared";
+    }
 }

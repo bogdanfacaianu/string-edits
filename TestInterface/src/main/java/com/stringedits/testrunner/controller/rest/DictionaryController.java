@@ -1,5 +1,7 @@
 package com.stringedits.testrunner.controller.rest;
 
+import com.github.liblevenshtein.transducer.Algorithm;
+import com.string.edits.domain.SearchDTO;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.service.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,11 @@ public class DictionaryController {
     public String getMatchesWithMaxDistance(
         @RequestParam("languageName") String languageName,
         @RequestParam("word") String word,
+        @RequestParam(value = "algorithm", defaultValue = "STANDARD") Algorithm algorithm,
         @RequestParam(value = "maxDistance", defaultValue = "5") int maxDistance) {
 
-        TermQuery resultsForWord = dictionaryService.getResultsForWord(languageName, word, maxDistance);
+        SearchDTO searchDTO = new SearchDTO(languageName, word, algorithm, maxDistance);
+        TermQuery resultsForWord = dictionaryService.getResultsForWord(searchDTO);
         return dictionaryService.convertToJsonOutput(resultsForWord);
     }
 
@@ -33,9 +37,11 @@ public class DictionaryController {
     public String getMatches(
         @PathVariable("languageName") String languageName,
         @PathVariable("word") String word,
+        @RequestParam(value = "algorithm", defaultValue = "STANDARD") Algorithm algorithm,
         @RequestParam(value = "maxDistance", defaultValue = "5") int maxDistance) {
 
-        TermQuery resultsForWord = dictionaryService.getResultsForWord(languageName, word, maxDistance);
+        SearchDTO searchDTO = new SearchDTO(languageName, word, algorithm, maxDistance);
+        TermQuery resultsForWord = dictionaryService.getResultsForWord(searchDTO);
         return dictionaryService.convertToJsonOutput(resultsForWord);
     }
 }

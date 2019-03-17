@@ -4,14 +4,16 @@ import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.RawJsonDocument;
-import com.couchbase.client.java.query.N1qlParams;
+import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryResult;
-import com.couchbase.client.java.query.ParameterizedN1qlQuery;
-import com.couchbase.client.java.query.Statement;
-import com.couchbase.client.java.view.ViewResult;
+import com.couchbase.client.java.query.N1qlQueryRow;
 import com.string.edits.couchbase.entities.helpers.CRUDHelper;
 import com.string.edits.couchbase.entities.helpers.HealthcheckHelper;
 import com.string.edits.couchbase.entities.helpers.QueryHelper;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CouchbaseClient extends DefaultCouchbaseClient {
 
@@ -37,5 +39,15 @@ public class CouchbaseClient extends DefaultCouchbaseClient {
 
     public JsonDocument remove(String key) {
         return this.crudHelper().remove(this.bucket(), key);
+    }
+
+    public List<String> getField(String field) {
+        List<String> keys = new ArrayList<>();
+
+        for (N1qlQueryRow result: this.bucket().query(N1qlQuery.simple(String.format("SELECT %s FROM %s", field, this.getBucketName())))) {
+            keys.add(result.value().toString());
+        }
+
+        return keys;
     }
 }

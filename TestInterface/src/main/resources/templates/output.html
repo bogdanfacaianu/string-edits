@@ -80,14 +80,17 @@
                           <h3><span th:text="${edits.editType}"></span></h3>
                         </tr>
                         <tr>
-                          <td style="padding-left: 5%; padding-right: 5%">At search term index:
+                          <td style="padding-left: 3%; padding-right: 3%">At search term index:
                             <b><span style="color: royalblue;" th:text="${edits.editIndex}"></span></b>
                           </td>
-                          <td style="padding-left: 5%; padding-right: 5%">Found character:
-                            <b><span style="color: red;" th:text="${edits.foundCharacter}"></span></b>
+                          <td style="padding-left: 3%; padding-right: 3%">Potential solution:
+                            <b><span style="color: red;" th:text="${edits.potentialSolution}"></span></b>
                           </td>
-                          <td th:if="${edits.potentialSolution}" style="padding-left: 5%; padding-right: 5%">Potential solution: <b>
-                            <span style="color: red;" th:text="${edits.potentialSolution}"></span></b>
+                          <td th:if="${edits.foundCharacter}" style="padding-left: 3%; padding-right: 3%">Found Character: <b>
+                            <span style="color: red;" th:text="${edits.foundCharacter}"></span></b>
+                          </td>
+                          <td th:if="${edits.transpositionIndex}" style="padding-left: 3%; padding-right: 3%">At search term index:
+                            <b><span style="color: royalblue;" th:text="${edits.transpositionIndex}"></span></b>
                           </td>
                         </tr>
                       </table>

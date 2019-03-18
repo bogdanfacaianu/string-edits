@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class TermQuery {
 
-    private String term;
+    private final String term;
     private String language;
     private List<DistanceToWord> matches;
 
@@ -15,10 +15,6 @@ public class TermQuery {
 
     public String getTerm() {
         return term;
-    }
-
-    public void setTerm(String term) {
-        this.term = term;
     }
 
     public List<DistanceToWord> getMatches() {

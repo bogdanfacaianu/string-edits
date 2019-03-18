@@ -5,6 +5,7 @@ import com.string.edits.domain.Language;
 import com.string.edits.domain.SearchDTO;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.persistence.repository.LanguageRepository;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,16 @@ public class DictionaryService {
             results.put(language, getResultsForWord(searchDTO));
         }
         return results;
+    }
+
+    public Map<String, Collection<TermQuery>> getResultsForWordsInLanguages(List<String> languages, List<String> words, SearchDTO searchDTO) {
+        Map<String, Collection<TermQuery>> wordResults = new HashMap<>();
+        for (String word : words) {
+            searchDTO.setSearchTerm(word);
+            Collection<TermQuery> results = getResultsForLanguages(languages, searchDTO).values();
+            wordResults.put(word, results);
+        }
+        return wordResults;
     }
 
     public void clearCache() {

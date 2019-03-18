@@ -23,6 +23,13 @@ public class WordEdits {
         this.potentialSolution = potentialSolution;
     }
 
+    public WordEdits(EditType editType, char potentialSolution, int editIndex, int transpositionIndex) {
+        this.editType = editType;
+        this.potentialSolution = potentialSolution;
+        this.editIndex = editIndex;
+        this.transpositionIndex = transpositionIndex;
+    }
+
     public WordEdits(EditType editType, int editIndex, char foundCharacter, char potentialSolution, int transpositionIndex) {
         this.editType = editType;
         this.editIndex = editIndex;

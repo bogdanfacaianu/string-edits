@@ -6,7 +6,36 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-  <link th:href="@{/css/textview.css}" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: rgba(141, 159, 154, 0.51);
+      padding-top: 60px;
+    }
+
+    .collapsible {
+      background-color: #777;
+      color: white;
+      cursor: pointer;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      text-align: center;
+      outline: none;
+      font-size: 20px;
+    }
+
+    .active, .collapsible:hover {
+      background-color: #555;
+    }
+
+    .content {
+      padding: 0 18px;
+      display: none;
+      overflow: hidden;
+      width: 100%;
+      background-color: #FFFFFF;
+    }
+  </style>
 </head>
 
 <body>
@@ -18,69 +47,72 @@
 
     <div class="container">
 
-      <div class="jumbotron">
-        <div class="container">
+      <div class="panel-body">
+        <div class="jumbotron">
+          <div class="container" style="text-align: center">
 
-          <h3>Insert text for analysis</h3><br>
-          <div class="container">
-
-            <form id="single-word-matches-form" th:action="@{/bulkAnalysis/getBulkMatches}" method="post">
-              <div class="funkyradio" th:each="language : ${languages}">
-                <div class="funkyradio-primary">
-                  <input type="checkbox" class="funkyradio-default" name="languages" th:id="${language + '_languageCheckbox'}" th:value="${language}"/>
-                  <label th:for="${language + '_languageCheckbox'}" th:text="${language}"></label>
-                </div>
-              </div>
-
-              <br>
-              <table width="50%">
+            <div th:each="result : ${results}">
+              <table width="100%">
                 <tr>
-                  <td style="text-align: center">
-                    <label style="padding-right: 10px; padding-left: 5px">Algorithm</label>
-                  </td>
-                  <td style="text-align: center">
-                    <label style="padding-right: 10px; padding-left: 5px">Max Distance</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type='text' name='maxDistance'/>
-                  </td>
-                  <td>
-                    <input type='text' name='algorithm'/>
-                  </td>
-                  <td style="padding-left: 20px">
-                    <input type="submit" value="Load" class="btn btn-primary">
+                  <td style="width: 80%;">
+                    <span style="font-size: 25px;">Language Results for term: </span><b>
+                    <span style="font-size: 25px; color: dodgerblue;" th:text="${result.key}"></span></b>
                   </td>
                 </tr>
               </table>
-              <hr>
-              <textarea id="words" style="width: 100%; height: 200px; resize: none" type='text' maxlength="50" name='word'>
-                <div th:each="result : ${results}">
-                  <select class="form-control" th:field="*{matches}" multiple="multiple">
-                    <option th:each="match : *{matches}"
-                            th:field="*{matches}"
-                            th:value="${match.word}"
-                            th:text="${match.word}">
-                    </option>
-                  </select>
-                </div>
-              </textarea>
-              <br>
-              <span id="display_count">0</span>/<span id="word_left">50</span>
-            </form>
 
+              <br>
+
+              <div class="container" th:each="answer : ${result.value}">
+                <div th:each="dtw : ${answer.matches}">
+                  <div th:if="${dtw.distance == 0}">
+                    <button class="collapsible" th:text="'Word Matching in ' + ${answer.language}"></button>
+                  </div>
+                  <div th:if="${dtw.distance > 0}">
+                    <button class="collapsible" th:text="'Word Matching in ' + ${answer.language} + ' is ' + ${dtw.word}"></button>
+                    <div class="content" th:if="${dtw.distance > 0}">
+                      <div th:each="edits : ${dtw.edits}">
+                        <table align="center" width="100%">
+                          <tr>
+                            <h3><span th:text="${edits.editType}"></span></h3>
+                          </tr>
+                          <tr>
+                            <td style="padding-left: 3%; padding-right: 3%">At search term index:
+                              <b><span style="color: royalblue;" th:text="${edits.editIndex}"></span></b>
+                            </td>
+                            <td style="padding-left: 3%; padding-right: 3%">Potential solution:
+                              <b><span style="color: red;" th:text="${edits.potentialSolution}"></span></b>
+                            </td>
+                            <td th:if="${edits.foundCharacter}" style="padding-left: 3%; padding-right: 3%">Found Character: <b>
+                              <span style="color: red;" th:text="${edits.foundCharacter}"></span></b>
+                            </td>
+                            <td th:if="${edits.transpositionIndex}" style="padding-left: 3%; padding-right: 3%">At search term index:
+                              <b><span style="color: royalblue;" th:text="${edits.transpositionIndex}"></span></b>
+                            </td>
+                          </tr>
+                        </table>
+                        <hr>
+                      </div>
+                      <br>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+                <hr>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
+
     </div>
 
   </div>
-
 
 </div>
 </body>
 <script src="webjars/jquery/2.1.4/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="/js/bulkAnalysis.js"></script>
+<script src="js/output.js"></script>
 </html>

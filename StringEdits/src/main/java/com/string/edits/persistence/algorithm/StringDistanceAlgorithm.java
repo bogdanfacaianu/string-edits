@@ -2,6 +2,7 @@ package com.string.edits.persistence.algorithm;
 
 import static com.string.edits.domain.EditType.DELETETION;
 import static com.string.edits.domain.EditType.INSERTION;
+import static com.string.edits.domain.EditType.MOVE;
 import static com.string.edits.domain.EditType.SUBSTITUTION;
 import static com.string.edits.domain.EditType.TRANSPOSITION;
 
@@ -130,11 +131,16 @@ public class StringDistanceAlgorithm {
                         edits.remove(i<j ? j-1 : j);
                     }
                 }
+
+                if ((we.getEditType() == INSERTION && edit.getEditType() == DELETETION)
+                    || (we.getEditType() == DELETETION && edit.getEditType() == INSERTION)) {
+                    if (we.getPotentialSolution() == edit.getPotentialSolution()) {
+                        edits.add(new WordEdits(MOVE, edit.getPotentialSolution(), edit.getEditIndex(), we.getEditIndex()));
+                        edits.remove(i);
+                        edits.remove(i<j ? j-1 : j);
+                    }
+                }
             }
         }
-    }
-
-    public static void main(String[] args) {
-        computeLevenshteinDistance("ufl", "ful");
     }
 }

@@ -18,33 +18,46 @@
 
     <div class="container">
 
-      <div class="panel-body">
-        <div class="jumbotron">
+      <div class="jumbotron">
+        <div class="container">
+
+          <h3>Input word for analysis in language desired</h3><br>
           <div class="container">
+            <div style="float: left">
+              <form id="single-word-matches-form" th:action="@{/input/getMatches}" method="post">
+                <div class="funkyradio" th:each="language : ${languages}">
+                  <div class="funkyradio-primary">
+                    <input type="checkbox" class="funkyradio-default" name="languages" th:id="${language + '_languageCheckbox'}" th:value="${language}"/>
+                    <label th:for="${language + '_languageCheckbox'}" th:text="${language}"></label>
+                  </div>
+                </div>
 
-            <h3>Input word for analysis in language desired</h3><br>
-            <div class="container">
-              <div style="float: left">
-                <form id="single-word-matches-form" th:action="@{/input/getMatches}" method="post">
-                  <table>
-                    <tr>
-                      <td th:cellpadding="30px"><label>Language</label></td>
-                      <td th:cellpadding="30px"><input type='text' name='languageName'/></td>
-                      <td th:cellpadding="30px"rowspan="2"><input type="submit" value="Load" class="btn"></td>
-                    </tr>
-                    <tr>
-                      <td th:cellpadding="30px"><label>Word</label></td>
-                      <td th:cellpadding="30px"><input type='text' name='word'/></td>
-                    </tr>
-                  </table>
-                </form>
-              </div>
-
+                <br>
+                <table width="100%">
+                  <tr>
+                    <td>
+                      <label style="padding-right: 10px; padding-left: 5px">Word</label>
+                      <input type='text' name='word'/>
+                    </td>
+                    <td>
+                      <label style="padding-right: 10px; padding-left: 5px">Algorithm</label>
+                      <input type='text' name='algorithm'/>
+                    </td>
+                    <td>
+                      <label style="padding-right: 10px; padding-left: 5px">Max Distance</label>
+                      <input type='text' name='maxDistance'/>
+                    </td>
+                    <td style="padding-left: 20px">
+                      <input type="submit" value="Load" class="btn btn-primary">
+                    </td>
+                  </tr>
+                </table>
+              </form>
             </div>
+
           </div>
         </div>
       </div>
-
     </div>
 
   </div>

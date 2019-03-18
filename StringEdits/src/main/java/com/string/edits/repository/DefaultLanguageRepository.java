@@ -1,10 +1,14 @@
 package com.string.edits.repository;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import com.string.edits.couchbase.entities.CouchbaseClient;
 import com.string.edits.domain.Language;
 import com.string.edits.persistence.repository.LanguageRepository;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -50,6 +54,11 @@ public class DefaultLanguageRepository implements LanguageRepository {
     }
 
     public List<String> findAllLanguages() {
-        return couchbaseClient.getField("name");
+        List<String> languages = new ArrayList<>();
+        for (String key : couchbaseClient.getField("name")) {
+            JsonObject jsonObject = gson.fromJson(key, JsonObject.class);
+            languages.add(jsonObject.get("name").getAsString());
+        }
+        return languages;
     }
 }

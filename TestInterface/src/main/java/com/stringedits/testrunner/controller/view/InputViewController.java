@@ -4,6 +4,8 @@ import com.github.liblevenshtein.transducer.Algorithm;
 import com.string.edits.domain.SearchDTO;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.service.DictionaryService;
+import java.util.Arrays;
+import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,18 +26,17 @@ public class InputViewController {
 
     @PostMapping(value = "/getMatches", produces = "application/json")
     public String getMatchesWithMaxDistance(
-        @RequestParam("languageName") String languageName,
         @RequestParam("word") String word,
         @RequestParam(value = "algorithm", defaultValue = "STANDARD") Algorithm algorithm,
         @RequestParam(value = "maxDistance", defaultValue = "5") int maxDistance,
+        @RequestParam("languages") String[] languages,
         RedirectAttributes redirect) {
 
-        SearchDTO searchDTO = new SearchDTO(languageName, word, algorithm, maxDistance);
-        TermQuery resultsForWord = dictionaryService.getResultsForWord(searchDTO);
-        redirect.addFlashAttribute("language", languageName);
-        redirect.addFlashAttribute("result", resultsForWord);
-        redirect.addFlashAttribute("term", resultsForWord.getTerm());
-        redirect.addFlashAttribute("distancesToWord", resultsForWord.getMatches());
+        SearchDTO searchDTO = new SearchDTO(null, word, algorithm, maxDistance);
+        Collection<TermQuery> resultsForWord = dictionaryService.getResultsForLanguages(Arrays.asList(languages), searchDTO).values();
+        redirect.addFlashAttribute("languages", dictionaryService.findAllLanguages());
+        redirect.addFlashAttribute("results", resultsForWord);
+        redirect.addFlashAttribute("term", word);
 
         return "redirect:/output";
     }

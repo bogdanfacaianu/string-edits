@@ -55,24 +55,20 @@
               <tr>
                 <td style="width: 80%;">
                   <span style="font-size: 25px;">Language Results for term: </span><b>
-                  <span style="font-size: 25px; color: dodgerblue;" th:text="${term}"></span></b></td>
-                <td style="width: 20%;">
-                  <form action="#" th:action="@{'/getMatches/' + ${language} + '/' + ${term}}" method="get" target="_blank">
-                    <button type="submit" class="btn btn-primary">JSON</button>
-                  </form>
+                  <span style="font-size: 25px; color: dodgerblue;" th:text="${term}"></span></b>
                 </td>
               </tr>
             </table>
 
             <br>
 
-            <div class="container">
-              <div th:each="dtw : ${distancesToWord}">
+            <div class="container" th:each="result : ${results}">
+              <div th:each="dtw : ${result.matches}">
                 <div th:if="${dtw.distance == 0}">
-                  <button class="collapsible" th:text="'Word Matching in ' + ${language}"></button>
+                  <button class="collapsible" th:text="'Word Matching in ' + ${result.language}"></button>
                 </div>
                 <div th:if="${dtw.distance > 0}">
-                  <button class="collapsible" th:text="'Word Matching in ' + ${language} + ' is ' + ${dtw.word}"></button>
+                  <button class="collapsible" th:text="'Word Matching in ' + ${result.language} + ' is ' + ${dtw.word}"></button>
                   <div class="content" th:if="${dtw.distance > 0}">
                     <div th:each="edits : ${dtw.edits}">
                       <table align="center" width="100%">
@@ -101,6 +97,7 @@
                 </div>
                 <br>
               </div>
+              <hr>
             </div>
 
           </div>

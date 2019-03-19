@@ -5,15 +5,12 @@ import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.RawJsonDocument;
 import com.couchbase.client.java.query.N1qlQuery;
-import com.couchbase.client.java.query.N1qlQueryResult;
 import com.couchbase.client.java.query.N1qlQueryRow;
 import com.string.edits.couchbase.entities.helpers.CRUDHelper;
 import com.string.edits.couchbase.entities.helpers.HealthcheckHelper;
 import com.string.edits.couchbase.entities.helpers.QueryHelper;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class CouchbaseClient extends DefaultCouchbaseClient {
 

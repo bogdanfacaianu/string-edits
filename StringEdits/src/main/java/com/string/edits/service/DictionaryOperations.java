@@ -7,15 +7,10 @@ import com.string.edits.domain.Language;
 import com.string.edits.domain.SearchDTO;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.persistence.algorithm.StringDistanceAlgorithm;
+import com.string.edits.persistence.repository.ResultsCacheRepository;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,11 +18,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class DictionaryOperations {
 
-    private Map<Integer, TermQuery> resultsCache;
+    private final ResultsCacheRepository resultsCache;
 
     @Autowired
-    public DictionaryOperations() {
-        this.resultsCache = new HashMap<>();
+    public DictionaryOperations(ResultsCacheRepository resultsCache) {
+        this.resultsCache = resultsCache;
     }
 
     public TermQuery getSolutions(Language language, SearchDTO searchDTO) {
@@ -43,12 +38,11 @@ public class DictionaryOperations {
     }
 
     TermQuery returnResults(Language language, SearchDTO searchDTO) {
-        int hashcode = searchDTO.hashCode();
-        if(resultsCache.containsKey(hashcode)) {
-            return resultsCache.get(hashcode);
+        if(resultsCache.findResult(searchDTO) != null) {
+            return resultsCache.findResult(searchDTO);
         }
         TermQuery result = getSolutions(language, searchDTO);
-        resultsCache.put(hashcode, result);
+        resultsCache.save(searchDTO, result);
         return result;
     }
 
@@ -85,18 +79,6 @@ public class DictionaryOperations {
     }
 
     public void clearCache() {
-        resultsCache = new HashMap<>();
-    }
-
-    public void clearLanguageCache(String languageName) {
-        Set<Integer> keysToRemove = new HashSet<>();
-        Iterator<Entry<Integer, TermQuery>> entries = resultsCache.entrySet().iterator();
-        while (entries.hasNext()) {
-            Entry<Integer, TermQuery> entry = entries.next();
-            if (entry.getValue().getLanguage().equals(languageName)) {
-                keysToRemove.add(entry.getKey());
-            }
-        }
-        keysToRemove.forEach(key -> resultsCache.remove(key));
+        resultsCache.deleteAll();
     }
 }

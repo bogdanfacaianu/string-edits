@@ -54,7 +54,7 @@
             <table width="100%">
               <tr>
                 <td style="width: 80%;">
-                  <span style="font-size: 25px;">Language Results for term: </span><b>
+                  <span style="font-size: 25px;">Language results for term: </span><b>
                   <span style="font-size: 25px; color: dodgerblue;" th:text="${term}"></span></b>
                 </td>
               </tr>
@@ -68,7 +68,10 @@
                   <button class="collapsible" th:text="'Word Matching in ' + ${result.language}"></button>
                 </div>
                 <div th:if="${dtw.distance > 0}">
-                  <button class="collapsible" th:text="'Word Matching in ' + ${result.language} + ' is ' + ${dtw.word}"></button>
+                  <button class="collapsible">
+                    <span th:text="'Word Matching in ' + ${result.language} + ' is '"></span>
+                    <b><i><span th:text="${dtw.word}"></span></i></b>
+                  </button>
                   <div class="content" th:if="${dtw.distance > 0}">
                     <div th:each="edits : ${dtw.edits}">
                       <table align="center" width="100%">

@@ -50,4 +50,8 @@ public class CouchbaseClient extends DefaultCouchbaseClient {
 
         return keys;
     }
+
+    public void flushBucket() {
+        this.bucket().query(N1qlQuery.simple(String.format("DELETE FROM %s", this.getBucketName())));
+    }
 }

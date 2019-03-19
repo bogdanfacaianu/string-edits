@@ -17,4 +17,5 @@ public interface LanguageRepository {
 
     List<String> findAllLanguages();
 
+    void deleteAll();
 }

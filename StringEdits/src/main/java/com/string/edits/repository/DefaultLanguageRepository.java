@@ -2,14 +2,13 @@ package com.string.edits.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
 import com.string.edits.couchbase.entities.CouchbaseClient;
 import com.string.edits.domain.Language;
 import com.string.edits.persistence.repository.LanguageRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,7 +18,7 @@ public class DefaultLanguageRepository implements LanguageRepository {
     private final Gson gson;
 
     @Autowired
-    public DefaultLanguageRepository(CouchbaseClient couchbaseClient, Gson gson) {
+    public DefaultLanguageRepository(@Qualifier("dictionary") CouchbaseClient couchbaseClient, Gson gson) {
         this.couchbaseClient = couchbaseClient;
         this.gson = gson;
     }
@@ -53,6 +52,7 @@ public class DefaultLanguageRepository implements LanguageRepository {
         save(language);
     }
 
+    @Override
     public List<String> findAllLanguages() {
         List<String> languages = new ArrayList<>();
         for (String key : couchbaseClient.getField("name")) {
@@ -60,5 +60,10 @@ public class DefaultLanguageRepository implements LanguageRepository {
             languages.add(jsonObject.get("name").getAsString());
         }
         return languages;
+    }
+
+    @Override
+    public void deleteAll() {
+        couchbaseClient.flushBucket();
     }
 }

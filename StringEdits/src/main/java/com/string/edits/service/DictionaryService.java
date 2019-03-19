@@ -56,7 +56,7 @@ public class DictionaryService {
     }
 
     public TermQuery getResultsForWord(SearchDTO searchDTO) {
-        TermQuery termQuery = new TermQuery(searchDTO.getSearchTerm());
+        TermQuery termQuery = new TermQuery(searchDTO.getSearchTerm(), searchDTO.getLanguage());
         Optional<Language> languageOptional = findLanguageByName(searchDTO.getLanguage());
         if (languageOptional.isPresent()) {
             termQuery = dictionaryOperations.returnResults(languageOptional.get(), searchDTO);

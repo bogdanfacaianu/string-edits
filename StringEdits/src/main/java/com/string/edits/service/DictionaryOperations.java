@@ -25,11 +25,11 @@ public class DictionaryOperations {
         this.resultsCache = resultsCache;
     }
 
-    public TermQuery getSolutions(Language language, SearchDTO searchDTO) {
+    private TermQuery getSolutions(Language language, SearchDTO searchDTO) {
         if (searchDTO.getMaxDistance() < 1) {
             searchDTO.setMaxDistance(5);
         }
-        TermQuery result = new TermQuery(searchDTO.getSearchTerm());
+        TermQuery result = new TermQuery(searchDTO.getSearchTerm(), searchDTO.getLanguage());
         result.setLanguage(searchDTO.getLanguage());
         Optional<ITransducer<Candidate>> transducer =
             TransducerCreator.createDictionarySearch(language.getDictionary(), searchDTO.getAlgorithm(), searchDTO.getMaxDistance());

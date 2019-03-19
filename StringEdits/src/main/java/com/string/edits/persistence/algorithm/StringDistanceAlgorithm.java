@@ -2,7 +2,9 @@ package com.string.edits.persistence.algorithm;
 
 import static com.string.edits.domain.EditType.DELETETION;
 import static com.string.edits.domain.EditType.INSERTION;
+import static com.string.edits.domain.EditType.MOVE;
 import static com.string.edits.domain.EditType.SUBSTITUTION;
+import static com.string.edits.domain.EditType.TRANSPOSITION;
 
 import com.string.edits.domain.DistanceToWord;
 import com.string.edits.domain.WordEdits;
@@ -111,6 +113,34 @@ public class StringDistanceAlgorithm {
         }
 
         Collections.reverse(edits);
+        mergeOperations(edits);
         return edits;
+    }
+
+    private static void mergeOperations(List<WordEdits> edits) {
+        List<WordEdits> copyOfEdits = new ArrayList<>(edits);
+
+        for (int i = 0; i < edits.size(); i++) {
+            WordEdits edit = edits.get(i);
+            for (int j = 0; j < copyOfEdits.size(); j++) {
+                WordEdits we = copyOfEdits.get(j);
+                if (we.getEditType() == SUBSTITUTION && edit.getEditType() == SUBSTITUTION) {
+                    if (we.getFoundCharacter() == edit.getPotentialSolution() && we.getPotentialSolution() == edit.getFoundCharacter()) {
+                        edits.add(new WordEdits(TRANSPOSITION, edit.getEditIndex(), edit.getFoundCharacter(), we.getFoundCharacter(), we.getEditIndex()));
+                        edits.remove(i);
+                        edits.remove(i<j ? j-1 : j);
+                    }
+                }
+
+                if ((we.getEditType() == INSERTION && edit.getEditType() == DELETETION)
+                    || (we.getEditType() == DELETETION && edit.getEditType() == INSERTION)) {
+                    if (we.getPotentialSolution() == edit.getPotentialSolution()) {
+                        edits.add(new WordEdits(MOVE, edit.getPotentialSolution(), edit.getEditIndex(), we.getEditIndex()));
+                        edits.remove(i);
+                        edits.remove(i<j ? j-1 : j);
+                    }
+                }
+            }
+        }
     }
 }

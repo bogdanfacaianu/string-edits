@@ -1,5 +1,6 @@
 package com.string.edits.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,7 +8,7 @@ public class DistanceToWord {
 
     private final String word;
     private int distance;
-    private List<WordEdits> edits;
+    private List<WordEdits> edits = new ArrayList<>();
 
     public DistanceToWord(String word) {
         this.word = word;

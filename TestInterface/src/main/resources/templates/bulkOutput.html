@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/layout">
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <style>
+    body {
+      background-color: rgba(141, 159, 154, 0.51);
+      padding-top: 60px;
+    }
+
+    .collapsible {
+      background-color: #777;
+      color: white;
+      cursor: pointer;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      text-align: center;
+      outline: none;
+      font-size: 20px;
+    }
+
+    .active, .collapsible:hover {
+      background-color: #555;
+    }
+
+    .content {
+      padding: 0 18px;
+      display: none;
+      overflow: hidden;
+      width: 100%;
+      background-color: #FFFFFF;
+    }
+  </style>
+</head>
+
+<body>
+<div th:replace="navbar :: navbar"></div>
+
+<div class="container-fluid">
+
+  <div layout:fragment="content">
+
+    <div class="container">
+
+      <div class="panel-body">
+        <div class="jumbotron">
+          <div class="container" style="text-align: center">
+
+            <div th:each="result : ${results}">
+              <table width="100%">
+                <tr>
+                  <td style="width: 80%;">
+                    <span style="font-size: 25px;">Language results for term: </span><b>
+                    <span style="font-size: 25px; color: dodgerblue;" th:text="${result.key}"></span></b>
+                  </td>
+                </tr>
+              </table>
+
+              <br>
+
+              <div class="container" th:each="answer : ${result.value}">
+                <div th:each="dtw : ${answer.matches}">
+                  <div th:if="${dtw.distance == 0}">
+                    <button class="collapsible" th:text="'Word is matching in ' + ${answer.language}"></button>
+                  </div>
+                  <div th:if="${dtw.distance > 0}">
+                    <button class="collapsible">
+                      <span th:text="'Word matching in ' + ${answer.language} + ' is '"></span>
+                      <b><i><span th:text="${dtw.word}"></span></i></b>
+                    </button>
+                    <div class="content" th:if="${dtw.distance > 0}">
+                      <div th:each="edits : ${dtw.edits}">
+                        <table align="center" width="100%">
+                          <tr>
+                            <h3><span th:text="${edits.editType}"></span></h3>
+                          </tr>
+                          <tr>
+                            <td style="padding-left: 3%; padding-right: 3%">At search term index:
+                              <b><span style="color: royalblue;" th:text="${edits.editIndex}"></span></b>
+                            </td>
+                            <td style="padding-left: 3%; padding-right: 3%">Potential solution:
+                              <b><span style="color: red;" th:text="${edits.potentialSolution}"></span></b>
+                            </td>
+                            <td th:if="${edits.foundCharacter}" style="padding-left: 3%; padding-right: 3%">Found Character: <b>
+                              <span style="color: red;" th:text="${edits.foundCharacter}"></span></b>
+                            </td>
+                            <td th:if="${edits.transpositionIndex}" style="padding-left: 3%; padding-right: 3%">At search term index:
+                              <b><span style="color: royalblue;" th:text="${edits.transpositionIndex}"></span></b>
+                            </td>
+                          </tr>
+                        </table>
+                        <hr>
+                      </div>
+                      <br>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+                <hr>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</body>
+<script src="webjars/jquery/2.1.4/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="js/output.js"></script>
+</html>

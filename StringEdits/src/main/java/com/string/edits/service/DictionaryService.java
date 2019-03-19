@@ -2,14 +2,17 @@ package com.string.edits.service;
 
 import com.google.gson.Gson;
 import com.string.edits.domain.Language;
+import com.string.edits.domain.SearchDTO;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.persistence.repository.LanguageRepository;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Component
 @Service
 public class DictionaryService {
 
@@ -32,17 +35,8 @@ public class DictionaryService {
         languageRepository.save(language);
     }
 
-    public void addWordToLanguage(String languageName, String word, String description) {
-        languageRepository.addWordToLanguage(languageName, word, description);
-    }
-
-    public TermQuery getResultsForWord(String languageName, String word, int maxDistance) {
-        TermQuery termQuery = new TermQuery(word);
-        Optional<Language> languageOptional = findLanguageByName(languageName);
-        if (languageOptional.isPresent()) {
-            termQuery = dictionaryOperations.returnResults(languageOptional.get(), word, maxDistance);
-        }
-        return termQuery;
+    public void addWordToLanguage(String languageName, String word) {
+        languageRepository.addWordToLanguage(languageName, word);
     }
 
     public void removeLanguage(String languageName) {
@@ -55,5 +49,41 @@ public class DictionaryService {
 
     public void removeWordFromLanguage(String languageName, String word) {
         languageRepository.removeWordFromLanguage(languageName, word);
+    }
+
+    public List<String> findAllLanguages() {
+        return languageRepository.findAllLanguages();
+    }
+
+    public TermQuery getResultsForWord(SearchDTO searchDTO) {
+        TermQuery termQuery = new TermQuery(searchDTO.getSearchTerm());
+        Optional<Language> languageOptional = findLanguageByName(searchDTO.getLanguage());
+        if (languageOptional.isPresent()) {
+            termQuery = dictionaryOperations.returnResults(languageOptional.get(), searchDTO);
+        }
+        return termQuery;
+    }
+
+    public Map<String, TermQuery> getResultsForLanguages(List<String> languages, SearchDTO searchDTO) {
+        Map<String, TermQuery> results = new HashMap<>();
+        for (String language : languages) {
+            searchDTO.setLanguage(language);
+            results.put(language, getResultsForWord(searchDTO));
+        }
+        return results;
+    }
+
+    public Map<String, Collection<TermQuery>> getResultsForWordsInLanguages(List<String> languages, List<String> words, SearchDTO searchDTO) {
+        Map<String, Collection<TermQuery>> wordResults = new HashMap<>();
+        for (String word : words) {
+            searchDTO.setSearchTerm(word);
+            Collection<TermQuery> results = getResultsForLanguages(languages, searchDTO).values();
+            wordResults.put(word, results);
+        }
+        return wordResults;
+    }
+
+    public void clearCache() {
+        dictionaryOperations.clearCache();
     }
 }

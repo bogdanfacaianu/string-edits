@@ -1,4 +1,4 @@
-package com.stringedits.testrunner.controller;
+package com.stringedits.testrunner.controller.rest;
 
 import com.string.edits.domain.Language;
 import com.string.edits.service.DictionaryService;
@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,28 +29,8 @@ public class LanguageController {
         @PathVariable("languageName") String languageName,
         @PathVariable("word") String word) {
 
-        dictionaryService.addWordToLanguage(languageName, word, null);
+        dictionaryService.addWordToLanguage(languageName, word);
         return "OK: " + word +" added in " + languageName ;
-    }
-
-    @RequestMapping("/add/{languageName}/{word}/description/{description}")
-    public String addWordWithDescription(
-        @PathVariable("languageName") String languageName,
-        @PathVariable("word") String word,
-        @PathVariable("description") String description) {
-
-        dictionaryService.addWordToLanguage(languageName, word, description);
-        return "OK: " + word +" added in " + languageName + "\n With description: " + description;
-    }
-
-    @RequestMapping("/add/{languageName}/{word}/description")
-    public String addWordWithDescriptionReqPar(
-        @PathVariable("languageName") String languageName,
-        @PathVariable("word") String word,
-        @RequestParam(value = "description", required = false) String description) {
-
-        dictionaryService.addWordToLanguage(languageName, word, description);
-        return "OK: " + word +" added in " + languageName + "\n With description: " + description;
     }
 
     @RequestMapping("/listLanguage/{languageName}")
@@ -73,5 +52,11 @@ public class LanguageController {
     public String removeLanguage(@PathVariable("languageName") String languageName) {
         dictionaryService.removeLanguage(languageName);
         return "Removed: " + languageName;
+    }
+
+    @RequestMapping("/clearCache")
+    public String clearCache() {
+        dictionaryService.clearCache();
+        return "Cache Cleared";
     }
 }

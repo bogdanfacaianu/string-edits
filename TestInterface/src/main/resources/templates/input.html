@@ -1,31 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/layout">
 <head>
-  <title>Welcome</title>
-  <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-  <link href="static/css/textview.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <link th:href="@{/css/textview.css}" rel="stylesheet"/>
 </head>
+
 <body>
-<div class="container">
+<div th:replace="navbar :: navbar"></div>
 
-  <form method="POST" commandName="sendTextForAnalysis">
-    <table>
-      <tr>
-        <td><p>Input Your Text</p></td>
-      </tr>
-      <tr>
-        <td>
-          <textarea th:field="*{textareaField}"></textarea></td>
-        <td colspan="3">
-          <input type="submit" />
-        </td>
-      </tr>
-    </table>
-  </form>
+<div class="container-fluid">
 
-  <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-  <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <script src="static/js/textview.js"></script>
+  <div layout:fragment="content">
+
+    <div class="container">
+
+      <div class="jumbotron">
+        <div class="container">
+
+          <h3>Input word for analysis in language(s) desired</h3><br>
+          <div class="container">
+            <div style="float: left">
+              <form id="single-word-matches-form" th:action="@{/input/getMatches}" method="post">
+                <div class="funkyradio" th:each="language : ${languages}">
+                  <div class="funkyradio-primary">
+                    <input type="checkbox" class="funkyradio-default" name="languages" th:id="${language + '_languageCheckbox'}" th:value="${language}"/>
+                    <label th:for="${language + '_languageCheckbox'}" th:text="${language}"></label>
+                  </div>
+                </div>
+
+                <br>
+                <table width="100%">
+                  <tr>
+                    <td>
+                      <label style="padding-right: 10px; padding-left: 5px">Word</label>
+                      <input type='text' name='word'/>
+                    </td>
+                    <td>
+                      <label style="padding-right: 10px; padding-left: 5px">Algorithm</label>
+                      <input type='text' name='algorithm'/>
+                    </td>
+                    <td>
+                      <label style="padding-right: 10px; padding-left: 5px">Max Distance</label>
+                      <input type='text' name='maxDistance'/>
+                    </td>
+                    <td style="padding-left: 20px">
+                      <input type="submit" value="Load" class="btn btn-primary">
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>
 </body>
+<script src="webjars/jquery/2.1.4/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </html>

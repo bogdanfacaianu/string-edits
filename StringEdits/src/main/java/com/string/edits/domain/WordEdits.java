@@ -6,10 +6,9 @@ public class WordEdits {
 
     private EditType editType;
     private int editIndex;
-
     private char foundCharacter;
-    // applicable only for substitution or transposition
     private char potentialSolution;
+    private int transpositionIndex;
 
     public WordEdits(EditType editType, int editIndex, char foundCharacter, char potentialSolution) {
         this.editType = editType;
@@ -18,10 +17,25 @@ public class WordEdits {
         this.potentialSolution = potentialSolution;
     }
 
-    public WordEdits(EditType editType, int editIndex, char foundCharacter) {
+    public WordEdits(EditType editType, int editIndex, char potentialSolution) {
+        this.editType = editType;
+        this.editIndex = editIndex;
+        this.potentialSolution = potentialSolution;
+    }
+
+    public WordEdits(EditType editType, char potentialSolution, int editIndex, int transpositionIndex) {
+        this.editType = editType;
+        this.potentialSolution = potentialSolution;
+        this.editIndex = editIndex;
+        this.transpositionIndex = transpositionIndex;
+    }
+
+    public WordEdits(EditType editType, int editIndex, char foundCharacter, char potentialSolution, int transpositionIndex) {
         this.editType = editType;
         this.editIndex = editIndex;
         this.foundCharacter = foundCharacter;
+        this.potentialSolution = potentialSolution;
+        this.transpositionIndex = transpositionIndex;
     }
 
     public EditType getEditType() {
@@ -56,33 +70,43 @@ public class WordEdits {
         this.foundCharacter = foundCharacter;
     }
 
+    public int getTranspositionIndex() {
+        return transpositionIndex;
+    }
+
+    public void setTranspositionIndex(int transpositionIndex) {
+        this.transpositionIndex = transpositionIndex;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof WordEdits)) {
             return false;
         }
         WordEdits wordEdits = (WordEdits) o;
         return editIndex == wordEdits.editIndex &&
-            foundCharacter == wordEdits.foundCharacter&&
+            foundCharacter == wordEdits.foundCharacter &&
             potentialSolution == wordEdits.potentialSolution &&
+            transpositionIndex == wordEdits.transpositionIndex &&
             editType == wordEdits.editType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(editType, editIndex, foundCharacter, potentialSolution);
+        return Objects.hash(editType, editIndex, foundCharacter, potentialSolution, transpositionIndex);
     }
 
     @Override
     public String toString() {
         return "WordEdits{" +
             "editType=" + editType +
+            ", editIndex=" + editIndex +
             ", foundCharacter=" + foundCharacter +
             ", potentialSolution=" + potentialSolution +
-            ", at editIndex=" + editIndex +
+            ", transpositionIndex=" + transpositionIndex +
             '}';
     }
 }

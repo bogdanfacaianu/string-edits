@@ -9,8 +9,9 @@ public class TermQuery {
     private String language;
     private List<DistanceToWord> matches;
 
-    public TermQuery(String term) {
+    public TermQuery(String term, String language) {
         this.term = term;
+        this.language = language;
     }
 
     public String getTerm() {

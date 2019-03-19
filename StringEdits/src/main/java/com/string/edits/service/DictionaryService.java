@@ -41,7 +41,6 @@ public class DictionaryService {
 
     public void removeLanguage(String languageName) {
         languageRepository.delete(languageName);
-        dictionaryOperations.clearLanguageCache(languageName);
     }
 
     public String convertToJsonOutput(TermQuery termQuery) {

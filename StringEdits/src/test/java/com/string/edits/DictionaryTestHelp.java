@@ -15,8 +15,7 @@ import com.string.edits.domain.WordEdits;
 import com.string.edits.persistence.repository.LanguageRepository;
 import com.string.edits.persistence.repository.ResultsCacheRepository;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Optional;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,12 +23,14 @@ public class DictionaryTestHelp {
 
     protected final static String LANGUAGE = "language";
     protected final static String ABSENT_LANGUAGE = "inexistent-language";
-    private final static String TERM = "word";
+    protected final static String TERM = "word";
     private final static Algorithm ALGORITHM = Algorithm.STANDARD;
     private final static int MAX_DISTANCE = 5;
     protected final static String SOLUTION1 = "word1";
-    protected final static String SOLUTION2 = "word2";
+    private final static String SOLUTION2 = "word2";
     protected final static String NEW_WORD = "word3";
+    protected final static String TRANSPOSITIONS_WORD = "information";
+    protected final static String TRANSPOSITIONS_TRIGGER = "ineoramtoin";
 
     protected SearchDTO searchDTO = new SearchDTO(LANGUAGE, TERM, ALGORITHM, MAX_DISTANCE);
 
@@ -45,23 +46,24 @@ public class DictionaryTestHelp {
     @Autowired
     protected Gson gson;
 
-    protected void given_LanguageInRepository() {
-        Language language = createLanguage();
+    protected void given_LanguageInRepository(boolean withTranspositions) {
+        Language language = createLanguage(withTranspositions);
         String jsonResult = gson.toJson(language);
         when(couchbaseClient.get(LANGUAGE)).thenReturn(jsonResult);
-        when(languageRepository.findLanguage(LANGUAGE)).thenReturn(language);
+        when(languageRepository.findLanguage(LANGUAGE)).thenReturn(java.util.Optional.ofNullable(language));
     }
 
-    protected Language createLanguage() {
+    protected Language createLanguage(boolean withTranspositions) {
         Language language = new Language(LANGUAGE);
-        Set<String> dictionary = new HashSet<>();
-        dictionary.add(SOLUTION1);
-        dictionary.add(SOLUTION2);
-        language.setDictionary(dictionary);
+        language.addWord(SOLUTION1);
+        language.addWord(SOLUTION2);
+        if (withTranspositions) {
+            language.addWord(TRANSPOSITIONS_WORD);
+        }
         return language;
     }
 
-    protected TermQuery createTermQueryResult() {
+    protected Optional<TermQuery> createTermQueryResult() {
         TermQuery termQuery = new TermQuery(TERM, LANGUAGE);
 
         DistanceToWord dtw1 = new DistanceToWord(SOLUTION1, 3);
@@ -80,7 +82,7 @@ public class DictionaryTestHelp {
 
         termQuery.setMatches(Arrays.asList(dtw1, dtw2));
 
-        return termQuery;
+        return Optional.of(termQuery);
     }
 
     protected void given_ResultsCacheHasResult() {
@@ -88,29 +90,20 @@ public class DictionaryTestHelp {
     }
 
     protected void given_ResultsChacheMiss() {
-        when(resultsCache.findResult(searchDTO)).thenReturn(null);
+        when(resultsCache.findResult(searchDTO)).thenReturn(Optional.empty());
     }
 
     protected void assertPopulatedResultsAreReturned(TermQuery resultsForWord) {
-        assertThat(resultsForWord.getTerm()).isEqualTo(TERM);
-        assertThat(resultsForWord.getLanguage()).isEqualTo(LANGUAGE);
-        assertThat(resultsForWord.getMatches().size()).isEqualTo(2);
+        assertSearchDataIsReturned(resultsForWord, TERM, LANGUAGE, 2);
+
         assertThat(resultsForWord.getMatches().get(0).getWord()).isEqualTo(SOLUTION1);
         assertThat(resultsForWord.getMatches().get(0).getEdits().size()).isEqualTo(3);
         assertThat(resultsForWord.getMatches().get(1).getWord()).isEqualTo(SOLUTION2);
         assertThat(resultsForWord.getMatches().get(1).getEdits().size()).isEqualTo(3);
     }
 
-    protected void assertEmptyResultReturned(TermQuery resultsForWord) {
-        assertThat(resultsForWord.getTerm()).isEqualTo(TERM);
-        assertThat(resultsForWord.getLanguage()).isEqualTo(ABSENT_LANGUAGE);
-        assertThat(resultsForWord.getMatches()).isNull();
-    }
-
     protected void assertPopulatedResultsAreReturnedFromTransducer(TermQuery resultsForWord) {
-        assertThat(resultsForWord.getTerm()).isEqualTo(TERM);
-        assertThat(resultsForWord.getLanguage()).isEqualTo(LANGUAGE);
-        assertThat(resultsForWord.getMatches().size()).isEqualTo(2);
+        assertSearchDataIsReturned(resultsForWord, TERM, LANGUAGE, 2);
 
         assertThat(resultsForWord.getMatches().get(0).getWord()).isEqualTo(SOLUTION1);
         assertThat(resultsForWord.getMatches().get(0).getEdits().size()).isEqualTo(1);
@@ -125,5 +118,42 @@ public class DictionaryTestHelp {
         assertThat(we.getEditType()).isEqualTo(EditType.INSERTION);
         assertThat(we.getEditIndex()).isEqualTo(4);
         assertThat(we.getPotentialSolution()).isEqualTo('2');
+    }
+
+    protected void assertPopulatedResultsAreReturnedFromTransducer_withTranspositions(TermQuery resultsForWord) {
+        assertSearchDataIsReturned(resultsForWord, TRANSPOSITIONS_TRIGGER, LANGUAGE, 1);
+
+        assertThat(resultsForWord.getMatches().get(0).getWord()).isEqualTo(TRANSPOSITIONS_WORD);
+        assertThat(resultsForWord.getMatches().get(0).getEdits().size()).isEqualTo(3);
+
+        WordEdits we = resultsForWord.getMatches().get(0).getEdits().get(0);
+        assertThat(we.getEditType()).isEqualTo(EditType.SUBSTITUTION);
+        assertThat(we.getEditIndex()).isEqualTo(3);
+        assertThat(we.getFoundCharacter()).isEqualTo('e');
+        assertThat(we.getPotentialSolution()).isEqualTo('f');
+
+        we = resultsForWord.getMatches().get(0).getEdits().get(1);
+        assertThat(we.getEditType()).isEqualTo(EditType.TRANSPOSITION);
+        assertThat(we.getEditIndex()).isEqualTo(6);
+        assertThat(we.getFoundCharacter()).isEqualTo('a');
+        assertThat(we.getPotentialSolution()).isEqualTo('m');
+        assertThat(we.getTranspositionIndex()).isEqualTo(7);
+
+        we = resultsForWord.getMatches().get(0).getEdits().get(2);
+        assertThat(we.getEditType()).isEqualTo(EditType.TRANSPOSITION);
+        assertThat(we.getEditIndex()).isEqualTo(10);
+        assertThat(we.getFoundCharacter()).isEqualTo('i');
+        assertThat(we.getPotentialSolution()).isEqualTo('o');
+        assertThat(we.getTranspositionIndex()).isEqualTo(9);
+    }
+
+    protected void assertSearchDataIsReturned(TermQuery result, String term, String language, int noOfMatches) {
+        assertThat(result.getTerm()).isEqualTo(term);
+        assertThat(result.getLanguage()).isEqualTo(language);
+        if (noOfMatches == 0) {
+            assertThat(result.getMatches()).isNull();
+        } else {
+            assertThat(result.getMatches().size()).isEqualTo(noOfMatches);
+        }
     }
 }

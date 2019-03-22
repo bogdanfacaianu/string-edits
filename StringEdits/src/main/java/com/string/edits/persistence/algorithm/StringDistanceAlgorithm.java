@@ -11,8 +11,12 @@ import com.string.edits.domain.WordEdits;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StringDistanceAlgorithm {
+
+    private static final Logger LOG = LoggerFactory.getLogger(StringDistanceAlgorithm.class);
 
     public static DistanceToWord computeLevenshteinDistance(CharSequence lhs, CharSequence rhs) {
         int[][] distance = new int[lhs.length() + 1][rhs.length() + 1];
@@ -38,7 +42,7 @@ public class StringDistanceAlgorithm {
         dtw.setDistance(distance[lhs.length()][rhs.length()]);
         List<WordEdits> wordEdits = addEdits(distance, lhs.length(), rhs.length(), lhs.toString(), rhs.toString());
         dtw.setEdits(wordEdits);
-        System.out.println(dtw);
+        LOG.info("Edits computed are: {}", dtw);
         return dtw;
     }
 

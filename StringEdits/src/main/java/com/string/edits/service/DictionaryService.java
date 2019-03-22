@@ -32,7 +32,7 @@ public class DictionaryService {
     }
 
     public Optional<Language> findLanguageByName(String languageName) {
-        return Optional.ofNullable(languageRepository.findLanguage(languageName));
+        return languageRepository.findLanguage(languageName);
     }
 
     public void saveLanguage(Language language) {
@@ -90,5 +90,9 @@ public class DictionaryService {
 
     public void clearCache() {
         dictionaryOperations.clearCache();
+    }
+
+    public void deleteAllLanguages() {
+        languageRepository.deleteAll();
     }
 }

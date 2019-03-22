@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.string.edits.DictionaryTestHelp;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.persistence.repository.ResultsCacheRepository;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -24,10 +25,10 @@ public class DefaultResultsCacheRepositoryTest extends DictionaryTestHelp {
 
     @Test
     public void testSave() {
-        TermQuery termQuery = createTermQueryResult();
-        String json = gson.toJson(termQuery);
+        Optional<TermQuery> termQuery = createTermQueryResult();
+        String json = gson.toJson(termQuery.get());
 
-        cacheRepository.save(searchDTO, termQuery);
+        cacheRepository.save(searchDTO, termQuery.get());
 
         verify(couchbaseClient).upsert(String.valueOf(searchDTO.hashCode()), json);
     }

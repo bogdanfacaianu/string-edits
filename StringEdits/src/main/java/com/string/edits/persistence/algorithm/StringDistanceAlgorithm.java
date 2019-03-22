@@ -118,10 +118,9 @@ public class StringDistanceAlgorithm {
     }
 
     private static void mergeOperations(List<WordEdits> edits) {
-        List<WordEdits> copyOfEdits = new ArrayList<>(edits);
-
         for (int i = 0; i < edits.size(); i++) {
             WordEdits edit = edits.get(i);
+            List<WordEdits> copyOfEdits = new ArrayList<>(edits);
             for (int j = 0; j < copyOfEdits.size(); j++) {
                 WordEdits we = copyOfEdits.get(j);
                 if (we.getEditType() == SUBSTITUTION && edit.getEditType() == SUBSTITUTION) {

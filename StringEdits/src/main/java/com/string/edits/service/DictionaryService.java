@@ -10,11 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DictionaryService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DictionaryService.class);
 
     private final LanguageRepository languageRepository;
     private final DictionaryOperations dictionaryOperations;
@@ -58,10 +62,11 @@ public class DictionaryService {
     public TermQuery getResultsForWord(SearchDTO searchDTO) {
         TermQuery termQuery = new TermQuery(searchDTO.getSearchTerm(), searchDTO.getLanguage());
         Optional<Language> languageOptional = findLanguageByName(searchDTO.getLanguage());
-        if (languageOptional.isPresent()) {
-            termQuery = dictionaryOperations.returnResults(languageOptional.get(), searchDTO);
+        if (!languageOptional.isPresent()) {
+            LOG.error("No language found in bucket for {}", searchDTO.getLanguage());
+            return termQuery;
         }
-        return termQuery;
+        return dictionaryOperations.returnResults(languageOptional.get(), searchDTO);
     }
 
     public Map<String, TermQuery> getResultsForLanguages(List<String> languages, SearchDTO searchDTO) {

@@ -3,6 +3,8 @@ Finding and Visualising Edits to Strings
 
 
 ### Configuration
+The application is build with Java 8 and Maven.
+
 The StringEdis library requires a docker container running for couchbase databse (I used kitematic docker and configured ports accordingly to the ones provided)
 
 From there you need to access either localhost:8091 (their administrator interface with user: Administrator and pwd: administrator)
@@ -43,3 +45,6 @@ From here create a new user such as `test` with same password and all permission
  
  The test interface is for demo purpose as the **StringEdits** library was the main focus of this project.
  The interface app provides a formated view of the TermQuery result for various type searches for single word multilanguage or multiwords in multiple languages.
+
+For any issues or additional information contact me at:
+bogdan.facaianu@student.manchester.ac.uk

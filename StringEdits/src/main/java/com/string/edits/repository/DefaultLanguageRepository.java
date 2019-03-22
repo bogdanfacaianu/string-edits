@@ -7,6 +7,7 @@ import com.string.edits.domain.Language;
 import com.string.edits.persistence.repository.LanguageRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -30,9 +31,11 @@ public class DefaultLanguageRepository implements LanguageRepository {
 
     @Override
     public void addWordToLanguage(String languageName, String word) {
-        Language language = findLanguage(languageName);
-        language.addWord(word);
-        save(language);
+        Optional<Language> language = findLanguage(languageName);
+        language.ifPresent(lang -> {
+           lang.addWord(word);
+           save(lang);
+        });
     }
 
     @Override
@@ -41,15 +44,17 @@ public class DefaultLanguageRepository implements LanguageRepository {
     }
 
     @Override
-    public Language findLanguage(String languageName) {
-        return gson.fromJson(couchbaseClient.get(languageName), Language.class);
+    public Optional<Language> findLanguage(String languageName) {
+        return Optional.ofNullable(gson.fromJson(couchbaseClient.get(languageName), Language.class));
     }
 
     @Override
     public void removeWordFromLanguage(String languageName, String word) {
-        Language language = findLanguage(languageName);
-        language.removeWord(word);
-        save(language);
+        Optional<Language> language = findLanguage(languageName);
+        language.ifPresent(lang -> {
+            lang.removeWord(word);
+            save(lang);
+        });
     }
 
     @Override

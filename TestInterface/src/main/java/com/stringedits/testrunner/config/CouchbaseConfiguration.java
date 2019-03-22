@@ -20,7 +20,7 @@ public class CouchbaseConfiguration {
     @Qualifier("dictionary")
     public CouchbaseClient getDictionaryCouchbaseClient() {
         CouchbaseBucketConfig config1 =
-            new CouchbaseBucketConfig("dictionary", "bogdan", "bogdan", asList("localhost"), "StringEditsDB", 1000);
+            new CouchbaseBucketConfig("dictionary", "bogdan", "bogdan", asList("localhost", "local.couchbase"), "StringEditsDB", 1000);
         return couchbaseClientFactory.getCouchbaseClient(config1);
     }
 
@@ -28,7 +28,7 @@ public class CouchbaseConfiguration {
     @Qualifier("resultsCache")
     public CouchbaseClient getResultsCacheCouchbaseClient() {
         CouchbaseBucketConfig config1 =
-            new CouchbaseBucketConfig("resultsCache", "bogdan", "bogdan", asList("localhost"), "StringEditsDB", 1000);
+            new CouchbaseBucketConfig("resultsCache", "bogdan", "bogdan", asList("localhost", "local.couchbase"), "StringEditsDB", 1000);
         return couchbaseClientFactory.getCouchbaseClient(config1);
     }
 }

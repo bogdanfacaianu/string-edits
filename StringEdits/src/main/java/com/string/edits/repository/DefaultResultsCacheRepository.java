@@ -5,6 +5,7 @@ import com.string.edits.couchbase.entities.CouchbaseClient;
 import com.string.edits.domain.SearchDTO;
 import com.string.edits.domain.TermQuery;
 import com.string.edits.persistence.repository.ResultsCacheRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -27,9 +28,9 @@ public class DefaultResultsCacheRepository implements ResultsCacheRepository {
     }
 
     @Override
-    public TermQuery findResult(SearchDTO searchDTO) {
+    public Optional<TermQuery> findResult(SearchDTO searchDTO) {
         String key = String.valueOf(searchDTO.hashCode());
-        return gson.fromJson(couchbaseClient.get(key), TermQuery.class);
+        return Optional.ofNullable(gson.fromJson(couchbaseClient.get(key), TermQuery.class));
     }
 
     @Override

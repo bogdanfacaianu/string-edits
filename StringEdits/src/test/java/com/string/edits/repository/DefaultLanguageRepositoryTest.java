@@ -1,6 +1,7 @@
 package com.string.edits.repository;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.google.gson.GsonBuilder;
 import com.string.edits.DictionaryTestHelp;
@@ -24,7 +25,7 @@ public class DefaultLanguageRepositoryTest extends DictionaryTestHelp {
 
     @Test
     public void testSave() {
-        Language language = createLanguage();
+        Language language = createLanguage(false);
         String jsonResult = gson.toJson(language);
         languageRepository.save(language);
 
@@ -40,24 +41,29 @@ public class DefaultLanguageRepositoryTest extends DictionaryTestHelp {
 
     @Test
     public void testAddWordToLanguage() {
-        given_LanguageInRepository();
-        Language language = createLanguage();
+        given_LanguageInRepository(false);
+        Language language = createLanguage(false);
 
-        language.removeWord(SOLUTION2);
         language.addWord(NEW_WORD);
-        language.addWord(SOLUTION2);
         languageRepository.addWordToLanguage(LANGUAGE, NEW_WORD);
-
 
         verify(couchbaseClient).get(LANGUAGE);
 
         // little hack to bypass hashcodes in language hashset
         String jsonResult = gson.toJson(language);
         StringBuilder json = new StringBuilder(jsonResult);
-        json.setCharAt(46,'2');
-        json.setCharAt(54,'3');
+        json.setCharAt(46, '2');
+        json.setCharAt(54, '3');
 
         verify(couchbaseClient).upsert(LANGUAGE, json.toString());
+    }
+
+    @Test
+    public void testAddWordToAbsentLanguage() {
+        languageRepository.addWordToLanguage(LANGUAGE, NEW_WORD);
+
+        verify(couchbaseClient).get(LANGUAGE);
+        verifyZeroInteractions(couchbaseClient);
     }
 
     @Test
@@ -69,8 +75,8 @@ public class DefaultLanguageRepositoryTest extends DictionaryTestHelp {
 
     @Test
     public void testRemoveWordFromLanguage() {
-        given_LanguageInRepository();
-        Language language = createLanguage();
+        given_LanguageInRepository(true);
+        Language language = createLanguage(true);
 
         language.removeWord(SOLUTION1);
         languageRepository.removeWordFromLanguage(LANGUAGE, SOLUTION1);
@@ -78,6 +84,14 @@ public class DefaultLanguageRepositoryTest extends DictionaryTestHelp {
         verify(couchbaseClient).get(LANGUAGE);
         String jsonResult = gson.toJson(language);
         verify(couchbaseClient).upsert(LANGUAGE, jsonResult);
+    }
+
+    @Test
+    public void testRemoveWordFromAbsentLanguage() {
+        languageRepository.removeWordFromLanguage(LANGUAGE, SOLUTION1);
+
+        verify(couchbaseClient).get(LANGUAGE);
+        verifyZeroInteractions(couchbaseClient);
     }
 
     @Test

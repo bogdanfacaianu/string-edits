@@ -9,6 +9,7 @@ import com.string.edits.DictionaryTestHelp;
 import com.string.edits.domain.Language;
 import com.string.edits.domain.SearchDTO;
 import com.string.edits.domain.TermQuery;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -31,13 +32,13 @@ public class DictionaryServiceTest extends DictionaryTestHelp {
 
     @Test
     public void testGetResultsForWord() {
-        given_LanguageInRepository();
-        given_DictionaryReturnsQueryResult(searchDTO);
+        given_LanguageInRepository(true);
+        given_DictionaryReturnsQueryResult(searchDTO, true);
 
         TermQuery resultsForWord = dictionaryService.getResultsForWord(searchDTO);
 
         verify(languageRepository).findLanguage(LANGUAGE);
-        verify(dictionaryOperations).returnResults(createLanguage(), searchDTO);
+        verify(dictionaryOperations).returnResults(createLanguage(true), searchDTO);
 
         assertPopulatedResultsAreReturned(resultsForWord);
     }
@@ -50,12 +51,12 @@ public class DictionaryServiceTest extends DictionaryTestHelp {
         verify(languageRepository).findLanguage(ABSENT_LANGUAGE);
         verifyZeroInteractions(dictionaryOperations);
 
-        assertEmptyResultReturned(resultsForWord);
+        assertSearchDataIsReturned(resultsForWord, TERM, ABSENT_LANGUAGE, 0);
     }
 
-    private void given_DictionaryReturnsQueryResult(SearchDTO searchDTO) {
-        Language language = createLanguage();
-        TermQuery result = createTermQueryResult();
-        when(dictionaryOperations.returnResults(language, searchDTO)).thenReturn(result);
+    private void given_DictionaryReturnsQueryResult(SearchDTO searchDTO, boolean withTranspositions) {
+        Language language = createLanguage(withTranspositions);
+        Optional<TermQuery> result = createTermQueryResult();
+        when(dictionaryOperations.returnResults(language, searchDTO)).thenReturn(result.get());
     }
 }

@@ -30,9 +30,9 @@ public class DictionaryOperations {
     }
 
     TermQuery returnResults(Language language, SearchDTO searchDTO) {
-        if(resultsCache.findResult(searchDTO) != null) {
+        if(resultsCache.findResult(searchDTO).isPresent()) {
             LOG.info("Retrieving results from cache for {}", searchDTO);
-            return resultsCache.findResult(searchDTO);
+            return resultsCache.findResult(searchDTO).get();
         }
         TermQuery result = getSolutions(language, searchDTO);
         resultsCache.save(searchDTO, result);
